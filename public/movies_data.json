@@ -1,0 +1,184 @@
+[
+    {
+        "title": "Avengers: Endgame",
+        "image": "https://i.pinimg.com/736x/d5/86/19/d58619d1fe5a4ca71c57cb1afde76a0a.jpg",
+        "duration": "181 minutes",
+        "actors": [
+            "Robert Downey Jr.",
+            "Chris Evans",
+            "Mark Ruffalo"
+        ],
+        "director": "Anthony Russo, Joe Russo",
+        "genre": "Action, Adventure, Drama",
+        "release_date": "2019-04-26"
+    },
+    {
+        "title": "The Dark Knight",
+        "image": "https://i.pinimg.com/736x/40/3a/8d/403a8d0c52bbbe8c59955a2647c03586.jpg",
+        "duration": "152 minutes",
+        "actors": [
+            "Christian Bale",
+            "Heath Ledger",
+            "Aaron Eckhart"
+        ],
+        "director": "Christopher Nolan",
+        "genre": "Action, Crime, Drama",
+        "release_date": "2008-07-18"
+    },
+    {
+        "title": "Inception",
+        "image": "https://i.pinimg.com/736x/43/9a/1c/439a1c4583a953c26b63d08a1d832f53.jpg",
+        "duration": "148 minutes",
+        "actors": [
+            "Leonardo DiCaprio",
+            "Joseph Gordon-Levitt",
+            "Ellen Page"
+        ],
+        "director": "Christopher Nolan",
+        "genre": "Action, Adventure, Sci-Fi",
+        "release_date": "2010-07-16"
+    },
+    {
+        "title": "Titanic",
+        "image": "https://i.pinimg.com/736x/44/55/d9/4455d96357fb041d1cf3c8a5264ed593.jpg",
+        "duration": "195 minutes",
+        "actors": [
+            "Leonardo DiCaprio",
+            "Kate Winslet",
+            "Billy Zane"
+        ],
+        "director": "James Cameron",
+        "genre": "Drama, Romance",
+        "release_date": "1997-12-19"
+    },
+    {
+        "title": "The Matrix",
+        "image": "https://i.pinimg.com/736x/ed/45/16/ed4516338fa5df348c13a2a7ce1e7998.jpg",
+        "duration": "136 minutes",
+        "actors": [
+            "Keanu Reeves",
+            "Laurence Fishburne",
+            "Carrie-Anne Moss"
+        ],
+        "director": "Lana Wachowski, Lilly Wachowski",
+        "genre": "Action, Sci-Fi",
+        "release_date": "1999-03-31"
+    },
+    {
+        "title": "Avatar",
+        "image": "https://i.pinimg.com/736x/85/8e/b8/858eb8b11420441e14ee961ac226a7f1.jpg",
+        "duration": "162 minutes",
+        "actors": [
+            "Sam Worthington",
+            "Zoe Saldana",
+            "Sigourney Weaver"
+        ],
+        "director": "James Cameron",
+        "genre": "Action, Adventure, Fantasy",
+        "release_date": "2009-12-18"
+    },
+    {
+        "title": "The Godfather",
+        "image": "https://i.pinimg.com/736x/3a/2d/34/3a2d34f0a80d0a462ed5b953df963a3e.jpg",
+        "duration": "175 minutes",
+        "actors": [
+            "Marlon Brando",
+            "Al Pacino",
+            "James Caan"
+        ],
+        "director": "Francis Ford Coppola",
+        "genre": "Crime, Drama",
+        "release_date": "1972-03-24"
+    },
+    {
+        "title": "Forrest Gump",
+        "image": "https://i.pinimg.com/736x/02/6b/0d/026b0d4dab1abe1c5f4460d6a45ae2ab.jpg",
+        "duration": "142 minutes",
+        "actors": [
+            "Tom Hanks",
+            "Robin Wright",
+            "Gary Sinise"
+        ],
+        "director": "Robert Zemeckis",
+        "genre": "Drama, Romance",
+        "release_date": "1994-07-06"
+    },
+    {
+        "title": "Jurassic Park",
+        "image": "https://i.pinimg.com/736x/52/3c/3a/523c3a386442b9f1395d9fbeae840442.jpg",
+        "duration": "127 minutes",
+        "actors": [
+            "Sam Neill",
+            "Laura Dern",
+            "Jeff Goldblum"
+        ],
+        "director": "Steven Spielberg",
+        "genre": "Adventure, Sci-Fi, Thriller",
+        "release_date": "1993-06-11"
+    },
+    {
+        "title": "Gladiator",
+        "image": "https://i.pinimg.com/736x/bc/af/43/bcaf4391b6cfc77a74ede9536e411c36.jpg",
+        "duration": "155 minutes",
+        "actors": [
+            "Russell Crowe",
+            "Joaquin Phoenix",
+            "Connie Nielsen"
+        ],
+        "director": "Ridley Scott",
+        "genre": "Action, Adventure, Drama",
+        "release_date": "2000-05-05"
+    },
+    {
+        "title": "Star Wars: Episode V - The Empire Strikes Back",
+        "image": "https://i.pinimg.com/736x/45/f9/cf/45f9cf382e2c26f3fec9ae2ebdaeed4e.jpg",
+        "duration": "124 minutes",
+        "actors": [
+            "Mark Hamill",
+            "Harrison Ford",
+            "Carrie Fisher"
+        ],
+        "director": "Irvin Kershner",
+        "genre": "Action, Adventure, Fantasy",
+        "release_date": "1980-05-21"
+    },
+    {
+        "title": "The Shawshank Redemption",
+        "image": "https://i.pinimg.com/736x/08/6f/fe/086ffeccab22baa2b4d49ab8787f9b90.jpg",
+        "duration": "142 minutes",
+        "actors": [
+            "Tim Robbins",
+            "Morgan Freeman",
+            "Bob Gunton"
+        ],
+        "director": "Frank Darabont",
+        "genre": "Drama",
+        "release_date": "1994-09-23"
+    },
+    {
+        "title": "Pulp Fiction",
+        "image": "https://i.pinimg.com/736x/89/41/e7/8941e71464be8fe81ade92a86817338e.jpg",
+        "duration": "154 minutes",
+        "actors": [
+            "John Travolta",
+            "Uma Thurman",
+            "Samuel L. Jackson"
+        ],
+        "director": "Quentin Tarantino",
+        "genre": "Crime, Drama",
+        "release_date": "1994-10-14"
+    },
+    {
+        "title": "The Lion King",
+        "image": "https://i.pinimg.com/736x/29/48/c6/2948c6b3e59b7d64df4692b7a3e20e20.jpg",
+        "duration": "88 minutes",
+        "actors": [
+            "Matthew Broderick",
+            "Jeremy Irons",
+            "James Earl Jones"
+        ],
+        "director": "Roger Allers, Rob Minkoff",
+        "genre": "Animation, Adventure, Drama",
+        "release_date": "1994-06-15"
+    }
+]

@@ -16,7 +16,7 @@ const MainHeader = () => {
         component="img"
         src={logo}
         alt="Logo"
-        maxHeight="60px" // Chỉ giới hạn chiều cao logo mà không thay đổi tổng thể
+        maxHeight="60px" 
       />
 
       {/* Menu */}
