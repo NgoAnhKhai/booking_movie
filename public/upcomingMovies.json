@@ -1,0 +1,112 @@
+[
+  {
+    "title": "Dune: Part Two",
+    "image": "https://i.pinimg.com/736x/0f/d0/28/0fd0284e66c1cc1d0d86e1a4e45b8ee7.jpg",
+    "duration": "155 minutes",
+    "actors": ["Timothée Chalamet", "Zendaya", "Rebecca Ferguson"],
+    "director": "Denis Villeneuve",
+    "genre": "Adventure, Drama, Sci-Fi",
+    "release_date": "2024-11-03",
+    "trailer": "https://www.youtube.com/watch?v=Tofw8aEeX9Q"
+  },
+  {
+    "title": "Killers of the Flower Moon",
+    "image": "https://i.pinimg.com/736x/40/4e/d7/404ed7d1568c598d3a5190c0d49a438a.jpg",
+    "duration": "160 minutes",
+    "actors": ["Leonardo DiCaprio", "Robert De Niro", "Jesse Plemons"],
+    "director": "Martin Scorsese",
+    "genre": "Crime, Drama, History",
+    "release_date": "2024-10-20",
+    "trailer": "https://www.youtube.com/watch?v=O4f4v2-gtMY"
+  },
+  {
+    "title": "The Marvels",
+    "image": "https://i.pinimg.com/736x/33/5d/94/335d94f7d781f2f3e4d27a8df9f2e7c0.jpg",
+    "duration": "130 minutes",
+    "actors": ["Brie Larson", "Iman Vellani", "Teyonah Parris"],
+    "director": "Nia DaCosta",
+    "genre": "Action, Adventure, Sci-Fi",
+    "release_date": "2024-02-15",
+    "trailer": "https://www.youtube.com/watch?v=Gy7DeefJ5ME"
+  },
+  {
+    "title": "Wonka",
+    "image": "https://i.pinimg.com/736x/c4/72/4c/c4724c12a77fa536ac58d8d196b727d7.jpg",
+    "duration": "110 minutes",
+    "actors": ["Timothée Chalamet", "Olivia Colman", "Sally Hawkins"],
+    "director": "Paul King",
+    "genre": "Adventure, Comedy, Family",
+    "release_date": "2023-12-15",
+    "trailer": "https://www.youtube.com/watch?v=FK4NfN5yAuk"
+  },
+  {
+    "title": "Indiana Jones and the Dial of Destiny",
+    "image": "https://i.pinimg.com/736x/4e/2a/2a/4e2a2a3e5d48cdfe0a16dd15c8ce34f1.jpg",
+    "duration": "150 minutes",
+    "actors": ["Harrison Ford", "Phoebe Waller-Bridge", "Mads Mikkelsen"],
+    "director": "James Mangold",
+    "genre": "Action, Adventure",
+    "release_date": "2023-06-30",
+    "trailer": "https://www.youtube.com/watch?v=RbOiL6yYHfA"
+  },
+  {
+    "title": "The Batman",
+    "image": "https://i.pinimg.com/736x/c6/6d/c7/c66dc79f9443494ff5a969cfe46a2c9b.jpg",
+    "duration": "176 minutes",
+    "actors": ["Robert Pattinson", "Zoë Kravitz", "Paul Dano"],
+    "director": "Matt Reeves",
+    "genre": "Action, Crime, Drama",
+    "release_date": "2024-03-15",
+    "trailer": "https://www.youtube.com/watch?v=mqqft2x_Aa4"
+  },
+  {
+    "title": "Avatar: The Way of Water",
+    "image": "https://i.pinimg.com/736x/4c/3f/d9/4c3fd9a7e98bcb737f986c1720df34b4.jpg",
+    "duration": "192 minutes",
+    "actors": ["Sam Worthington", "Zoe Saldana", "Sigourney Weaver"],
+    "director": "James Cameron",
+    "genre": "Action, Adventure, Fantasy",
+    "release_date": "2023-12-16",
+    "trailer": "https://www.youtube.com/watch?v=d9MyW72ELq0"
+  },
+  {
+    "title": "Black Panther: Wakanda Forever",
+    "image": "https://i.pinimg.com/736x/c1/b2/64/c1b2645f7a7b24f85cf3be34dce0f19f.jpg",
+    "duration": "161 minutes",
+    "actors": ["Letitia Wright", "Lupita Nyong'o", "Danai Gurira"],
+    "director": "Ryan Coogler",
+    "genre": "Action, Adventure, Drama",
+    "release_date": "2023-11-10",
+    "trailer": "https://www.youtube.com/watch?v=xjDjIWPwcPU"
+  },
+  {
+    "title": "Fantastic Beasts: The Secrets of Dumbledore",
+    "image": "https://i.pinimg.com/736x/ed/3e/53/ed3e53a7ff3f5b3bb7c5b2244df091d9.jpg",
+    "duration": "142 minutes",
+    "actors": ["Eddie Redmayne", "Jude Law", "Mads Mikkelsen"],
+    "director": "David Yates",
+    "genre": "Adventure, Family, Fantasy",
+    "release_date": "2022-04-08",
+    "trailer": "https://www.youtube.com/watch?v=1oJJ_PBqohc"
+  },
+  {
+    "title": "The Flash",
+    "image": "https://i.pinimg.com/736x/37/6e/d7/376ed783caeab3bc0cbb7ef5f84aece7.jpg",
+    "duration": "144 minutes",
+    "actors": ["Ezra Miller", "Michael Keaton", "Ben Affleck"],
+    "director": "David Yates",
+    "genre": "Action, Adventure, Fantasy",
+    "release_date": "2023-06-16",
+    "trailer": "https://www.youtube.com/watch?v=Yj0l8g2v4xE"
+  },
+  {
+    "title": "Jurassic Park",
+    "image": "https://i.pinimg.com/736x/52/3c/3a/523c3a386442b9f1395d9fbeae840442.jpg",
+    "duration": "127 minutes",
+    "actors": ["Sam Neill", "Laura Dern", "Jeff Goldblum"],
+    "director": "Steven Spielberg",
+    "genre": "Adventure, Sci-Fi, Thriller",
+    "release_date": "1993-06-11",
+    "trailer": "https://www.youtube.com/watch?v=lc0UehYemQA"
+  }
+]
