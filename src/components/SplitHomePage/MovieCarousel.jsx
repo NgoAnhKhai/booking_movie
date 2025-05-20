@@ -4,7 +4,7 @@ import { ArrowForward, ArrowBack } from "@mui/icons-material";
 import { mediaQueries } from "../../breakpoint";
 import movieData from "../../../public/movies_data.json";
 import { useNavigate } from "react-router-dom";
-
+import {determineRegion} from "../utils"
 const MovieCarousel = () => {
   const [currentIndex, setCurrentIndex] = useState(0);
   const [itemsPerPage, setItemsPerPage] = useState(3);
@@ -45,12 +45,6 @@ const MovieCarousel = () => {
     }
   };
 
-  // Hàm xác định vùng miền theo vĩ độ (Ví dụ ở VN)
-  const determineRegion = (latitude) => {
-    if (latitude >= 16) return "north"; // Bắc
-    if (latitude >= 11) return "central"; // Trung
-    return "south"; // Nam
-  };
 
   const handleDetailMovie = (movie) => {
     navigate(`/movies/${movie.id}`);
@@ -127,7 +121,7 @@ const MovieCarousel = () => {
                 height: "100%",
                 [mediaQueries.md]: { height: "350px" },
                 [mediaQueries.sm]: { height: "300px" },
-                [mediaQueries.xs]: { height: "500px" },
+                [mediaQueries.xs]: { height: "600px" },
 
                 "&:hover .hoverChild": {
                   opacity: 1,

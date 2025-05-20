@@ -9,19 +9,19 @@ import {
   Divider,
   CircularProgress,
 } from "@mui/material";
-import { useParams } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
 import movieData from "../../public/movies_data.json";
 import PlayArrowIcon from "@mui/icons-material/PlayArrow";
 import ArrowBackIosIcon from "@mui/icons-material/ArrowBackIos";
 import ArrowForwardIosIcon from "@mui/icons-material/ArrowForwardIos";
-
+import { determineRegion } from "../components/utils";
 const DetailMoviePage = () => {
   const [openTrailer, setOpenTrailer] = useState(false);
   const [actorPage, setActorPage] = useState(0);
   const ITEMS_PER_PAGE = 3;
   const { id } = useParams();
   const movie = movieData.find((m) => m.id === parseInt(id));
-
+  const navigate = useNavigate();
   if (!movie) {
     return <Typography variant="h6">Không tìm thấy phim</Typography>;
   }
@@ -31,6 +31,23 @@ const DetailMoviePage = () => {
     actorPage * ITEMS_PER_PAGE,
     (actorPage + 1) * ITEMS_PER_PAGE
   );
+  const handleBookTicket = () => {
+    if (navigator.geolocation) {
+      navigator.geolocation.getCurrentPosition(
+        (position) => {
+          const lat = position.coords.latitude;
+          const region = determineRegion(lat);  
+          navigate(`/booking/${region}/${movie.id}`);  
+        },
+        (error) => {
+          console.error("Lỗi lấy vị trí: ", error);
+          navigate(`/booking/south/${movie.id}`);  
+        }
+      );
+    } else {
+      navigate(`/booking/south/${movie.id}`);  
+    }
+  };
 
   return (
     <Box
@@ -183,6 +200,7 @@ const DetailMoviePage = () => {
                     boxShadow: "0 8px 16px rgba(255, 236, 61, 0.9)",
                   },
                 }}
+                onClick={handleBookTicket}
               >
                 Đặt Vé
               </Button>
