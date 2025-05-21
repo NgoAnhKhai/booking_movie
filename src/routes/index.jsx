@@ -5,6 +5,7 @@ import DetailBookingCentral from "../pages/booking/detail/DetailBookingCentral";
 import DetailBookingNorth from "../pages/booking/detail/DetailBookingNorth";
 import DetailBookingSouth from "../pages/booking/detail/DetailBookingSouth";
 import DetailMoviePage from "../pages/DetailMoviePage";
+import SeatSelectionPage from "../pages/booking/SeatSelectionPage";
 const Router = () => {
   return (
     <Routes>
@@ -14,6 +15,7 @@ const Router = () => {
         <Route path="/booking/north/:id" element={<DetailBookingNorth />} />
         <Route path="/booking/south/:id" element={<DetailBookingSouth />} />
         <Route path="/movies/:id" element={<DetailMoviePage />} />
+        <Route path="/seat-selector/:id" element={<SeatSelectionPage />} />
       </Route>
     </Routes>
   );

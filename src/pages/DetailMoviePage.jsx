@@ -15,13 +15,15 @@ import PlayArrowIcon from "@mui/icons-material/PlayArrow";
 import ArrowBackIosIcon from "@mui/icons-material/ArrowBackIos";
 import ArrowForwardIosIcon from "@mui/icons-material/ArrowForwardIos";
 import { determineRegion } from "../components/utils";
+
 const DetailMoviePage = () => {
   const [openTrailer, setOpenTrailer] = useState(false);
   const [actorPage, setActorPage] = useState(0);
   const ITEMS_PER_PAGE = 3;
+  const navigate = useNavigate();
   const { id } = useParams();
   const movie = movieData.find((m) => m.id === parseInt(id));
-  const navigate = useNavigate();
+
   if (!movie) {
     return <Typography variant="h6">Không tìm thấy phim</Typography>;
   }
@@ -31,24 +33,23 @@ const DetailMoviePage = () => {
     actorPage * ITEMS_PER_PAGE,
     (actorPage + 1) * ITEMS_PER_PAGE
   );
-  const handleBookTicket = () => {
-    if (navigator.geolocation) {
-      navigator.geolocation.getCurrentPosition(
-        (position) => {
-          const lat = position.coords.latitude;
-          const region = determineRegion(lat);  
-          navigate(`/booking/${region}/${movie.id}`);  
-        },
-        (error) => {
-          console.error("Lỗi lấy vị trí: ", error);
-          navigate(`/booking/south/${movie.id}`);  
-        }
-      );
-    } else {
-      navigate(`/booking/south/${movie.id}`);  
-    }
-  };
+  // Chuyển rate thang 10 thành % thang 100
+  const ratePercent = (movie.rate / 10) * 100;
+  // Chọn màu theo rate
+  let rateColor = "#d32f2f"; // đỏ mặc định
+  if (ratePercent >= 70) {
+    rateColor = "#4caf50"; // xanh
+  } else if (ratePercent >= 40) {
+    rateColor = "#fbc02d"; // vàng
+  }
 
+  const handleBookingClick = () => {
+    // Giả sử determineRegion trả về region string hoặc đường dẫn để route tới
+    const region = determineRegion();
+
+    // Điều hướng tới trang booking, truyền id phim và region làm params hoặc query
+    navigate(`/booking/${region}/${id}`);
+  };
   return (
     <Box
       sx={{
@@ -98,19 +99,14 @@ const DetailMoviePage = () => {
             <Box display="flex" alignItems="center" gap={2} mb={2}>
               {/* Score Circle */}
               <Box display="flex" alignItems="center" gap={1}>
-                <Box
-                  sx={{
-                    position: "relative",
-                    width: 48,
-                    height: 48,
-                  }}
-                >
+                {/* Rating Circle */}
+                <Box sx={{ position: "relative", width: 60, height: 60 }}>
                   <CircularProgress
                     variant="determinate"
-                    value={movie.rate || 0}
-                    size={48}
+                    value={ratePercent}
+                    size={60}
                     thickness={5}
-                    sx={{ color: "#21d07a" }}
+                    sx={{ color: rateColor }}
                   />
                   <Box
                     sx={{
@@ -123,11 +119,11 @@ const DetailMoviePage = () => {
                       alignItems: "center",
                       justifyContent: "center",
                       fontWeight: "bold",
-                      fontSize: "14px",
-                      color: "white",
+                      fontSize: 16,
+                      color: rateColor,
                     }}
                   >
-                    {movie.rate || 0}%
+                    {movie.rate?.toFixed(1) || "0.0"}
                   </Box>
                 </Box>
                 <Box>
@@ -200,7 +196,7 @@ const DetailMoviePage = () => {
                     boxShadow: "0 8px 16px rgba(255, 236, 61, 0.9)",
                   },
                 }}
-                onClick={handleBookTicket}
+                onClick={handleBookingClick}
               >
                 Đặt Vé
               </Button>

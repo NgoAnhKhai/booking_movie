@@ -47,7 +47,6 @@ const MainHeader = () => {
         justifyContent="space-between"
         alignItems="center"
         px={4}
-        py={0.15}
         bgcolor={isDetailPage ? "transparent" : "#d50032"}
         boxShadow={isDetailPage ? "none" : "0 2px 6px rgb(0 0 0 / 0.2)"}
         position="sticky"

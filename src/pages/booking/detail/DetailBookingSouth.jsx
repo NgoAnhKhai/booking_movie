@@ -1,124 +1,220 @@
-import React, { useState, useEffect } from "react";
-import { Box, Typography, Button, Stack, FormControl, InputLabel, Select, MenuItem } from "@mui/material";
+import { Box, Typography, CircularProgress } from "@mui/material";
 import { useParams } from "react-router-dom";
-import movieData from "../../../../public/movies_data.json";  // Dữ liệu movieData
+import { useRegionCities } from "../../../hooks/useRegionCities";
+import { useMovie } from "../../../hooks/useMovies";
+import BreadcrumbSteps from "../../../components/BreadcrumbSteps";
+import CitySelector from "../../../components/DropDown/CitySelector";
+import CinemaSelector from "../../../components/DropDown/CinemaSelector";
+import { useCinemas } from "../../../hooks/useCinema";
+import ShowtimesList from "../../../components/ShowTimeList";
 
 const DetailBookingSouth = () => {
-  const { id } = useParams();  // Lấy id từ params
-  const [selectedCinema, setSelectedCinema] = useState("");
-  const [movie, setMovie] = useState(null);  // Dữ liệu bộ phim sẽ được set vào đây
-  
-  useEffect(() => {
-    // Tìm phim có id tương ứng từ movieData
-    const selectedMovie = movieData.find(movie => movie.id === parseInt(id));
-    console.log(selectedMovie);
-    
-    setMovie(selectedMovie);  // Cập nhật dữ liệu phim vào state
-  }, [id]);  // Mỗi khi id thay đổi, useEffect sẽ chạy lại
+  const { id } = useParams();
+  const movie = useMovie(id);
+  const { cities, selectedCity, setSelectedCity } = useRegionCities();
+  const { cinemas, selectedCinema, setSelectedCinema } = useCinemas(
+    cities,
+    selectedCity
+  );
 
-  // Handle change trong bộ lọc cinema
-  const handleCinemaChange = (event) => {
-    setSelectedCinema(event.target.value);
+  const handleCinemaChange = (e) => {
+    setSelectedCinema(e.target.value);
   };
 
   if (!movie) {
-    return <Typography variant="h6">Phim không tìm thấy</Typography>; // Hiển thị nếu phim không tồn tại
+    return <Typography variant="h6">Phim không tìm thấy</Typography>;
   }
+  const currentStep = "booking";
+
+  // Chuyển rate thang 10 thành % thang 100
+  const ratePercent = (movie.rate / 10) * 100;
+
+  // Chọn màu theo rate
+  let rateColor = "#d32f2f"; // đỏ mặc định
+  if (ratePercent >= 70) rateColor = "#4caf50";
+  else if (ratePercent >= 40) rateColor = "#fbc02d";
 
   return (
-    <Box sx={{ padding: 3 }}>
-      {/* Bộ lọc Cinema */}
-      <Box sx={{ marginBottom: 3 }}>
-        <FormControl fullWidth>
-          <InputLabel>Chọn Rạp</InputLabel>
-          <Select
-            value={selectedCinema}
-            onChange={handleCinemaChange}
-            label="Chọn Rạp"
-          >
-            <MenuItem value="">
-              <em>Tất cả</em>
-            </MenuItem>
-            <MenuItem value="Cinema A">Cinema A</MenuItem>
-            <MenuItem value="Cinema B">Cinema B</MenuItem>
-            <MenuItem value="Cinema C">Cinema C</MenuItem>
-          </Select>
-        </FormControl>
+    <Box
+      sx={{
+        position: "relative",
+        minHeight: "100vh",
+        padding: 7,
+        maxWidth: "100%",
+        margin: "0 auto",
+      }}
+    >
+      <Box sx={{ mb: 1, marginLeft: 1 }}>
+        <BreadcrumbSteps currentStep={currentStep} />
       </Box>
 
-      {/* Hiển thị thông tin bộ phim */}
-      <Box sx={{ display: "flex", gap: 4 }}>
-        {/* Poster */}
-        <Box sx={{ flex: 1, minWidth: 300 }}>
+      {/* Background + Movie Info */}
+      <Box
+        sx={{
+          position: "relative",
+          borderRadius: 3,
+          overflow: "hidden",
+          color: "white",
+          mb: 6,
+          boxShadow: "0 8px 24px rgba(0,0,0,0.4)",
+          height: "100%",
+        }}
+      >
+        <Box
+          component="img"
+          src={movie.image}
+          alt={movie.title}
+          sx={{
+            width: "100%",
+            height: "100%",
+            objectFit: "cover",
+            filter: "blur(8px) brightness(0.5)",
+            position: "absolute",
+            top: 0,
+            left: 0,
+            zIndex: 0,
+          }}
+        />
+        <Box
+          sx={{
+            position: "relative",
+            display: "flex",
+            gap: 5,
+            alignItems: "center",
+            padding: 4,
+            zIndex: 1,
+            height: "100%",
+            boxSizing: "border-box",
+          }}
+        >
           <Box
             component="img"
             src={movie.image}
             alt={movie.title}
-            sx={{ width: "100%", borderRadius: 2, boxShadow: 4 }}
+            sx={{
+              width: 320,
+              borderRadius: 6,
+              boxShadow: "0 8px 24px rgba(0,0,0,0.7)",
+              zIndex: 2,
+            }}
           />
-        </Box>
 
-        {/* Movie Info */}
-        <Box sx={{ flex: 2, minWidth: 300 }}>
-          <Typography variant="h3" fontWeight="bold" mb={1}>
-            {movie.title}
-          </Typography>
-          <Box display="flex" alignItems="center" gap={2} mb={2}>
-            <Typography variant="h6">Rating: {movie.rate}/10</Typography>
-            <Typography variant="body1">{movie.duration}</Typography>
-            <Typography variant="body1">Đạo diễn: {movie.director}</Typography>
-            <Typography variant="body1">Thể loại: {movie.genre}</Typography>
-            <Typography variant="body1">Ngày công chiếu: {movie.release_date}</Typography>
-          </Box>
-          <Typography variant="body2">{movie.description}</Typography>
-        </Box>
-      </Box>
+          <Box sx={{ flex: 1, color: "white", zIndex: 2 }}>
+            <Typography variant="h3" fontWeight="bold" mb={3}>
+              {movie.title}
+            </Typography>
 
-      {/* Danh sách suất chiếu */}
-      <Box sx={{ marginTop: 4 }}>
-        <Typography variant="h5" fontWeight="bold" mb={2}>
-          Suất Chiếu
-        </Typography>
-        {movie.showtimes && movie.showtimes.length > 0 ? (
-          movie.showtimes
-            .filter(showtime => !selectedCinema || showtime.cinema === selectedCinema) // Filter theo cinema chọn
-            .map((showtime, idx) => (
-              <Box key={idx} sx={{ marginBottom: 2 }}>
-                <Typography variant="h6">{showtime.cinema}</Typography>
-                <Typography variant="body1">{showtime.time}</Typography>
+            <Box sx={{ display: "flex", alignItems: "center", gap: 3, mb: 4 }}>
+              <Box sx={{ position: "relative", width: 60, height: 60 }}>
+                <CircularProgress
+                  variant="determinate"
+                  value={ratePercent}
+                  size={60}
+                  thickness={5}
+                  sx={{ color: rateColor }}
+                />
+                <Box
+                  sx={{
+                    position: "absolute",
+                    top: 0,
+                    left: 0,
+                    width: "100%",
+                    height: "100%",
+                    display: "flex",
+                    alignItems: "center",
+                    justifyContent: "center",
+                    fontWeight: "bold",
+                    fontSize: 16,
+                    color: rateColor,
+                  }}
+                >
+                  {movie.rate?.toFixed(1) || "0.0"}
+                </Box>
               </Box>
-            ))
-        ) : (
-          <Typography variant="body1">Không có suất chiếu.</Typography>
-        )}
+              <Typography variant="subtitle1" fontWeight={600}>
+                User Score
+              </Typography>
+              <Box
+                sx={{
+                  backgroundColor:
+                    movie.rate_age >= 18
+                      ? "#d50000"
+                      : movie.rate_age >= 13
+                      ? "#fbc02d"
+                      : "#43a047",
+                  color: "white",
+                  fontWeight: "bold",
+                  px: 1.5,
+                  py: 0.5,
+                  borderRadius: "6px",
+                  fontSize: "14px",
+                }}
+              >
+                T{movie.rate_age || "?"}
+              </Box>
+            </Box>
+
+            <Box
+              sx={{
+                display: "grid",
+                gridTemplateColumns: "repeat(auto-fit,minmax(150px,1fr))",
+                gap: 2,
+                color: "rgba(255,255,255,0.85)",
+                fontSize: 16,
+              }}
+            >
+              <Box>
+                <Typography fontWeight={600}>Duration:</Typography>
+                <Typography>{movie.duration}</Typography>
+              </Box>
+              <Box>
+                <Typography fontWeight={600}>Director:</Typography>
+                <Typography>{movie.director}</Typography>
+              </Box>
+              <Box>
+                <Typography fontWeight={600}>Genre:</Typography>
+                <Typography>{movie.genre}</Typography>
+              </Box>
+              <Box>
+                <Typography fontWeight={600}>Release Date:</Typography>
+                <Typography>{movie.release_date}</Typography>
+              </Box>
+            </Box>
+
+            <Typography
+              variant="body1"
+              sx={{
+                mt: 4,
+                lineHeight: 1.6,
+                color: "rgba(255,255,255,0.75)",
+                fontSize: 15,
+              }}
+            >
+              {movie.description}
+            </Typography>
+          </Box>
+        </Box>
       </Box>
 
-      {/* Nút Đặt Vé */}
-      <Stack direction="row" spacing={2} mt={3}>
-        <Button
-          variant="contained"
-          sx={{
-            backgroundColor: "#FFD700",
-            color: "#d50032",
-            fontWeight: 700,
-            textTransform: "none",
-            px: 3,
-            py: 1,
-            borderRadius: 2,
-            position: "relative",
-            overflow: "hidden",
-            boxShadow: "0 6px 12px rgba(255, 215, 0, 0.7)",
-            transition: "transform 0.3s ease, background-color 0.3s ease",
-            "&:hover": {
-              backgroundColor: "#ffec3d",
-              transform: "scale(1.05)",
-              boxShadow: "0 8px 16px rgba(255, 236, 61, 0.9)",
-            },
-          }}
-        >
-          Đặt Vé
-        </Button>
-      </Stack>
+      {/* Dropdown chọn thành phố */}
+      <Box sx={{ mt: 5, display: "flex", gap: 2 }}>
+        <CitySelector
+          cities={cities}
+          selectedCity={selectedCity}
+          onChange={(e) => setSelectedCity(e.target.value)}
+        />
+        <CinemaSelector
+          cinemas={cinemas}
+          selectedCinema={selectedCinema}
+          onChange={handleCinemaChange}
+        />
+      </Box>
+      {/* Showtimes */}
+      <ShowtimesList
+        cinemas={cinemas}
+        selectedCinema={selectedCinema}
+        movieId={id}
+      />
     </Box>
   );
 };
