@@ -8,15 +8,3 @@ body,
   box-sizing: border-box;
 }
 
-body {
-  background: linear-gradient(
-    180deg,
-    #fff8f9 0%,
-    /* Hồng phấn rất nhạt */ #ffeaea 70%,
-    /* Hồng cam nhạt */ #fff /* Trắng */
-  );
-  margin: 0;
-  font-family: "Montserrat", sans-serif;
-  color: #222; /* Chữ đậm, rõ */
-  background: none;
-}

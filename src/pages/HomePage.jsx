@@ -1,11 +1,9 @@
-import { Box } from "@mui/material";
-import MovieCarousel from "../components/SplitHomePage/MovieCarousel";
-import MovieTabs from "../components/MovieTabs/MovieTabs";
-const HomePage = () => (
-  <Box>
-    <MovieCarousel />
-    <MovieTabs />
-  </Box>
-);
+import React from 'react'
 
-export default HomePage;
+const HomePage = () => {
+  return (
+    <div>HomePage</div>
+  )
+}
+
+export default HomePage
