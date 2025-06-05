@@ -315,7 +315,7 @@ const LoginPage = () => {
 
             <Box textAlign="right" mb={3}>
               <Link
-                href="#"
+                href="/auth/reset"
                 underline="none"
                 sx={{ color: "#B43FEB", fontSize: 14 }}
               >
@@ -341,7 +341,11 @@ const LoginPage = () => {
 
             <Typography variant="body2" color="white" textAlign="center" mt={3}>
               Don’t have an account?{" "}
-              <Link href="/register" underline="none" sx={{ color: "#B43FEB" }}>
+              <Link
+                href="/auth/register"
+                underline="none"
+                sx={{ color: "#B43FEB" }}
+              >
                 Register
               </Link>
             </Typography>

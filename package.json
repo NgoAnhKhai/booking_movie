@@ -19,6 +19,7 @@
     "@tailwindcss/vite": "^4.1.7",
     "axios": "^1.9.0",
     "framer-motion": "^12.16.0",
+    "inter-ui": "^4.1.0",
     "lodash": "^4.17.21",
     "numeral": "^2.0.6",
     "react": "^19.1.0",
@@ -27,6 +28,7 @@
     "react-markdown": "^10.1.0",
     "react-router-dom": "^6.30.0",
     "rehype-raw": "^7.0.0",
+    "styled-components": "^6.1.18",
     "tailwindcss": "^4.1.7",
     "yup": "^1.6.1"
   },

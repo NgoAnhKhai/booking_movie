@@ -324,14 +324,9 @@ const RegisterPage = () => {
             Login
           </Button>
 
-          <Typography
-            variant="body2"
-            color="text.secondary"
-            textAlign="center"
-            mt={3}
-          >
+          <Typography variant="body2" color="#fff" textAlign="center" mt={3}>
             Already have an account?{" "}
-            <Link href="/login" underline="none" sx={{ color: "#9B76FF" }}>
+            <Link href="/auth/login" underline="none" sx={{ color: "#9B76FF" }}>
               Login
             </Link>
           </Typography>

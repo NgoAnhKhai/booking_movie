@@ -1,190 +1,155 @@
-import logo from "../../public/images/PandaLogo.png";
-import { Box, Button, Typography, Modal } from "@mui/material";
 import React, { useState } from "react";
-import RegisterPage from "../pages/RegisterPage";
-import LoginPage from "../pages/LoginPage";
-import { useLocation, useNavigate } from "react-router-dom";
+import {
+  Box,
+  Typography,
+  IconButton,
+  Button,
+  TextField,
+  InputAdornment,
+  Menu,
+  MenuItem,
+} from "@mui/material";
+import NotificationsIcon from "@mui/icons-material/Notifications";
+import AccountCircleIcon from "@mui/icons-material/AccountCircle";
+import ArrowDropDownIcon from "@mui/icons-material/ArrowDropDown";
+import "inter-ui";
+const Header = () => {
+  const [darkMode, setDarkMode] = useState(true);
+  const [anchorEl, setAnchorEl] = useState(null);
+  const [isFocused, setIsFocused] = useState(false);
+  const [searchQuery, setSearchQuery] = useState("");
 
-const styleModal = {
-  position: "fixed",
-  top: "50%",
-  left: "50%",
-  transform: "translate(-50%, -50%)",
-  bgcolor: "background.paper",
-  borderRadius: 2,
-  boxShadow: 24,
-  p: 4,
-  width: 360,
-  outline: "none",
-};
-
-const MainHeader = () => {
-  const [openLogin, setOpenLogin] = useState(false);
-  const [openRegister, setOpenRegister] = useState(false);
-  const location = useLocation();
-
-  const navigate = useNavigate();
-  const handleOpenLogin = () => {
-    setOpenRegister(false);
-    setOpenLogin(true);
-  };
-  const isDetailPage = location.pathname.startsWith("/movies/");
-  const handleOpenRegister = () => {
-    setOpenLogin(false);
-    setOpenRegister(true);
+  const handleSearchChange = (event) => {
+    setSearchQuery(event.target.value);
   };
 
-  const handleClose = () => {
-    setOpenLogin(false);
-    setOpenRegister(false);
+  const handleMenuOpen = (event) => {
+    setAnchorEl(event.currentTarget);
+  };
+
+  const handleMenuClose = () => {
+    setAnchorEl(null);
   };
 
   return (
-    <>
-      <Box
-        component="header"
-        display="flex"
-        justifyContent="space-between"
-        alignItems="center"
-        px={4}
-        py={0.15}
-        bgcolor={isDetailPage ? "transparent" : "#d50032"}
-        boxShadow={isDetailPage ? "none" : "0 2px 6px rgb(0 0 0 / 0.2)"}
-        position="sticky"
-        top={0}
-        zIndex={1100}
-      >
-        {/* Logo */}
-        <Box
-          onClick={() => navigate("/")}
-          component="img"
-          src={logo}
-          alt="Panda Cinema Logo"
-          sx={{ height: 90, cursor: "pointer", userSelect: "none" }}
-        />
+    <Box
+      sx={{
+        display: "flex",
+        justifyContent: "space-between",
+        alignItems: "center",
+        bgcolor: "#0D0C0F",
+        padding: "10px 20px",
+        width: "100%",
+        height: "72px",
+        fontFamily: "Inter, sans-serif",
+      }}
+    >
+      {/* Logo */}
+      <Typography variant="h6" color="common.white" fontWeight={600}>
+        CineMax
+      </Typography>
 
-        {/* Menu */}
-        <Box
-          component="nav"
-          display="flex"
-          gap={4}
-          sx={{ flexGrow: 1, justifyContent: "center" }}
-        >
-          {["Rạp chiếu", "Phim", "Giới thiệu", "Trợ giúp"].map((item) => (
-            <Typography
-              key={item}
-              variant="subtitle1"
-              component="a"
-              href="#"
-              sx={{
-                color: "white",
-                fontWeight: 600,
-                textDecoration: "none",
-                cursor: "pointer",
-                px: 1,
-                py: 0.5,
-                borderRadius: 1,
-                transition: "background-color 0.3s ease",
-                "&:hover": { backgroundColor: "rgba(255, 255, 255, 0.2)" },
-              }}
-            >
-              {item}
-            </Typography>
-          ))}
-        </Box>
-
-        {/* SignIn/SignUp */}
-        <Box display="flex" gap={2} alignItems="center">
-          <Button
-            onClick={handleOpenLogin}
-            variant="text"
-            sx={{
-              color: "white",
-              fontWeight: 600,
-              textTransform: "none",
-              "&:hover": { backgroundColor: "rgba(255, 255, 255, 0.15)" },
-            }}
-          >
-            Đăng nhập
-          </Button>
-          <Button
-            onClick={handleOpenRegister}
-            variant="contained"
-            sx={{
-              backgroundColor: "#FFD700",
-              color: "#d50032",
-              fontWeight: 700,
-              textTransform: "none",
-              px: 3,
-              py: 1,
-              borderRadius: 2,
-              position: "relative",
-              overflow: "hidden",
-              boxShadow: "0 6px 12px rgba(255, 215, 0, 0.7)",
-              transition: "transform 0.3s ease, background-color 0.3s ease",
-              "&:hover": {
-                backgroundColor: "#ffec3d",
-                transform: "scale(1.05)",
-                boxShadow: "0 8px 16px rgba(255, 236, 61, 0.9)",
-              },
-              "&::before": {
-                content: '""',
-                position: "absolute",
-                top: 0,
-                right: "-75%",
-                width: "50%",
-                height: "100%",
-                background:
-                  "linear-gradient(120deg, rgba(255,255,255,0.6) 0%, rgba(255,255,255,0.2) 60%, rgba(255,255,255,0.6) 100%)",
-                transform: "skewX(-25deg)",
-                transition: "right 0.7s ease",
-                zIndex: 2,
-              },
-              "&:hover::before": {
-                right: "125%",
-              },
-            }}
-          >
-            Đăng ký
-          </Button>
-        </Box>
+      {/* Menu */}
+      <Box sx={{ display: "flex", gap: "30px" }}>
+        <Typography variant="body1" color="common.white">
+          Movies
+        </Typography>
+        <Typography variant="body1" color="common.white">
+          Series
+        </Typography>
+        <Typography variant="body1" color="common.white">
+          Animation
+        </Typography>
+        <Typography variant="body1" color="common.white">
+          Genres
+        </Typography>
       </Box>
 
-      {/* Modal Đăng nhập */}
-      <Modal
-        open={openLogin}
-        onClose={handleClose}
-        sx={{ backdropFilter: "blur(3px)" }}
-      >
-        <Box sx={styleModal}>
-          <LoginPage
-            onClose={handleClose}
-            onSwitch={() => {
-              setOpenLogin(false);
-              setOpenRegister(true);
-            }}
-          />
-        </Box>
-      </Modal>
+      {/* Right Side (Search, Subscribe, Notifications, Account) */}
+      <Box sx={{ display: "flex", alignItems: "center", gap: "20px" }}>
+        {/* Search */}
+        <TextField
+          variant="outlined"
+          value={searchQuery}
+          onChange={handleSearchChange}
+          onFocus={() => setIsFocused(true)}
+          onBlur={() => setIsFocused(false)}
+          InputProps={{
+            endAdornment: (
+              <InputAdornment position="end">
+                <img
+                  src="/images/search/Search.svg"
+                  alt="search"
+                  style={{
+                    width: "24px",
+                    height: "24px",
+                    cursor: "pointer",
+                  }}
+                  onClick={() => console.log("Search icon clicked!")}
+                />
+              </InputAdornment>
+            ),
+          }}
+          sx={{
+            backgroundColor: isFocused ? "#1A161F" : "#0D0D0D",
+            borderRadius: 24,
+            width: isFocused ? "300px" : "250px",
+            paddingRight: "10px",
+            transition: "width 0.3s ease-in-out",
+            "& .MuiInputBase-input": { color: "white" },
+            "& .MuiOutlinedInput-root": {
+              "& fieldset": {
+                border: "none",
+              },
+            },
+            "& .MuiOutlinedInput-notchedOutline": {
+              border: "none",
+            },
+          }}
+        />
 
-      {/* Modal Đăng ký */}
-      <Modal
-        open={openRegister}
-        onClose={handleClose}
-        sx={{ backdropFilter: "blur(3px)" }}
-      >
-        <Box sx={styleModal}>
-          <RegisterPage
-            onClose={handleClose}
-            onSwitch={() => {
-              setOpenRegister(false);
-              setOpenLogin(true);
-            }}
-          />
+        {/* Subscribe */}
+        <Button
+          sx={{
+            bgcolor: "#B43FEB",
+            color: "#fff",
+            borderRadius: 24,
+            padding: "6px 24px",
+            textTransform: "none",
+            height: "40px",
+            width: "128px",
+            fontWeight: "bold",
+          }}
+        >
+          Subscribe
+        </Button>
+        {/* Notifications */}
+        <IconButton>
+          <NotificationsIcon sx={{ color: "#fff" }} />
+        </IconButton>
+
+        {/* Account with dropdown */}
+        <Box sx={{ display: "flex", alignItems: "center" }}>
+          <IconButton onClick={handleMenuOpen} sx={{ padding: 0 }}>
+            <AccountCircleIcon sx={{ color: "#fff", fontSize: "32px" }} />
+          </IconButton>
+          <ArrowDropDownIcon sx={{ color: "#fff" }} />
         </Box>
-      </Modal>
-    </>
+
+        {/* Dropdown menu */}
+        <Menu
+          anchorEl={anchorEl}
+          open={Boolean(anchorEl)}
+          onClose={handleMenuClose}
+          sx={{ marginTop: "35px" }}
+        >
+          <MenuItem onClick={handleMenuClose}>Profile</MenuItem>
+          <MenuItem onClick={handleMenuClose}>Settings</MenuItem>
+          <MenuItem onClick={handleMenuClose}>Logout</MenuItem>
+        </Menu>
+      </Box>
+    </Box>
   );
 };
 
-export default MainHeader;
+export default Header;
