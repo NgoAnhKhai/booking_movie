@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useContext, useState } from "react";
 import {
   Box,
   Typography,
@@ -8,16 +8,19 @@ import {
   InputAdornment,
   Menu,
   MenuItem,
+  useTheme,
 } from "@mui/material";
 import NotificationsIcon from "@mui/icons-material/Notifications";
 import AccountCircleIcon from "@mui/icons-material/AccountCircle";
 import ArrowDropDownIcon from "@mui/icons-material/ArrowDropDown";
 import "inter-ui";
+import { ThemeContext } from "../context/UseTheme";
 const Header = () => {
-  const [darkMode, setDarkMode] = useState(true);
   const [anchorEl, setAnchorEl] = useState(null);
   const [isFocused, setIsFocused] = useState(false);
   const [searchQuery, setSearchQuery] = useState("");
+  const theme = useTheme();
+  const { isDark } = useContext(ThemeContext);
 
   const handleSearchChange = (event) => {
     setSearchQuery(event.target.value);
@@ -37,7 +40,9 @@ const Header = () => {
         display: "flex",
         justifyContent: "space-between",
         alignItems: "center",
-        bgcolor: "#0D0C0F",
+        bgcolor: isDark
+          ? theme.palette.background.default
+          : theme.palette.background.paper,
         padding: "10px 20px",
         width: "100%",
         height: "72px",
@@ -45,28 +50,29 @@ const Header = () => {
       }}
     >
       {/* Logo */}
-      <Typography variant="h6" color="common.white" fontWeight={600}>
+      <Typography variant="h6" color="text.primary" fontWeight={600}>
         CineMax
       </Typography>
 
       {/* Menu */}
-      <Box sx={{ display: "flex", gap: "30px" }}>
-        <Typography variant="body1" color="common.white">
-          Movies
-        </Typography>
-        <Typography variant="body1" color="common.white">
-          Series
-        </Typography>
-        <Typography variant="body1" color="common.white">
-          Animation
-        </Typography>
-        <Typography variant="body1" color="common.white">
-          Genres
-        </Typography>
+      <Box sx={{ display: "flex", gap: 4 }}>
+        {["Movies", "Series", "Animation", "Genres"].map((label) => (
+          <Typography
+            key={label}
+            variant="body1"
+            color="text.primary"
+            sx={{
+              cursor: "pointer",
+              "&:hover": { color: theme.palette.primary.main },
+            }}
+          >
+            {label}
+          </Typography>
+        ))}
       </Box>
 
       {/* Right Side (Search, Subscribe, Notifications, Account) */}
-      <Box sx={{ display: "flex", alignItems: "center", gap: "20px" }}>
+      <Box sx={{ display: "flex", alignItems: "center", gap: 3 }}>
         {/* Search */}
         <TextField
           variant="outlined"
@@ -81,9 +87,11 @@ const Header = () => {
                   src="/images/search/Search.svg"
                   alt="search"
                   style={{
-                    width: "24px",
-                    height: "24px",
+                    width: 24,
+                    height: 24,
                     cursor: "pointer",
+                    // Light mode: invert để thành đen; Dark mode: giữ trắng
+                    filter: isDark ? "none" : "invert(1)",
                   }}
                   onClick={() => console.log("Search icon clicked!")}
                 />
@@ -91,19 +99,25 @@ const Header = () => {
             ),
           }}
           sx={{
-            backgroundColor: isFocused ? "#1A161F" : "#0D0D0D",
-            borderRadius: 24,
-            width: isFocused ? "300px" : "250px",
-            paddingRight: "10px",
-            transition: "width 0.3s ease-in-out",
-            "& .MuiInputBase-input": { color: "white" },
-            "& .MuiOutlinedInput-root": {
-              "& fieldset": {
-                border: "none",
-              },
+            // nền khi blur = background.default (sáng nhạt/đen nhạt)
+            // khi focus = background.paper (trắng/đen đậm hơn)
+            backgroundColor: isFocused
+              ? theme.palette.background.paper
+              : theme.palette.background.default,
+            borderRadius: "24px",
+            width: isFocused ? 300 : 250,
+            transition:
+              "width 0.3s ease-in-out, background-color 0.3s ease-in-out",
+            px: 1, // padding ngang cho input
+            // text và con trỏ sẽ tự động tương phản
+            "& .MuiInputBase-input": {
+              color: theme.palette.text.primary,
             },
-            "& .MuiOutlinedInput-notchedOutline": {
-              border: "none",
+            // gỡ mọi viền của OutlinedInput
+            "& .MuiOutlinedInput-root": {
+              "& fieldset": { border: "none" },
+              "&:hover fieldset": { border: "none" },
+              "&.Mui-focused fieldset": { border: "none" },
             },
           }}
         />
@@ -125,15 +139,20 @@ const Header = () => {
         </Button>
         {/* Notifications */}
         <IconButton>
-          <NotificationsIcon sx={{ color: "#fff" }} />
+          <NotificationsIcon sx={{ color: theme.palette.text.primary }} />
         </IconButton>
 
         {/* Account with dropdown */}
         <Box sx={{ display: "flex", alignItems: "center" }}>
-          <IconButton onClick={handleMenuOpen} sx={{ padding: 0 }}>
-            <AccountCircleIcon sx={{ color: "#fff", fontSize: "32px" }} />
+          <IconButton onClick={handleMenuOpen} sx={{ p: 0 }}>
+            <AccountCircleIcon
+              sx={{
+                color: theme.palette.text.primary,
+                fontSize: 32,
+              }}
+            />
           </IconButton>
-          <ArrowDropDownIcon sx={{ color: "#fff" }} />
+          <ArrowDropDownIcon sx={{ color: theme.palette.text.primary }} />
         </Box>
 
         {/* Dropdown menu */}
@@ -141,7 +160,15 @@ const Header = () => {
           anchorEl={anchorEl}
           open={Boolean(anchorEl)}
           onClose={handleMenuClose}
-          sx={{ marginTop: "35px" }}
+          sx={{ mt: 4 }}
+          PaperProps={{
+            sx: {
+              // nền menu tự động trắng khi light, tối khi dark
+              backgroundColor: theme.palette.background.paper,
+              // text menu lấy màu chủ đạo
+              color: theme.palette.text.primary,
+            },
+          }}
         >
           <MenuItem onClick={handleMenuClose}>Profile</MenuItem>
           <MenuItem onClick={handleMenuClose}>Settings</MenuItem>

@@ -17,10 +17,7 @@ import MacBookPro from "/images/register/MacBook Pro 18.svg";
 const RegisterPage = () => {
   const [showPassword, setShowPassword] = useState(false);
   const [showConfirmPassword, setShowConfirmPassword] = useState(false);
-
-  const togglePassword = () => setShowPassword((prev) => !prev);
-  const toggleConfirmPassword = () => setShowConfirmPassword((prev) => !prev);
-
+  const [activeIndex, setActiveIndex] = useState(0);
   const contents = [
     {
       title: "Offers ad-free viewing of high quality",
@@ -39,121 +36,135 @@ const RegisterPage = () => {
     },
   ];
 
-  const [activeIndex, setActiveIndex] = useState(0);
-
   useEffect(() => {
-    const interval = setInterval(() => {
-      setActiveIndex((prev) => (prev + 1) % contents.length);
-    }, 4000);
-    return () => clearInterval(interval);
+    const iv = setInterval(
+      () => setActiveIndex((i) => (i + 1) % contents.length),
+      4000
+    );
+    return () => clearInterval(iv);
   }, []);
+
+  const togglePassword = () => setShowPassword((p) => !p);
+  const toggleConfirm = () => setShowConfirmPassword((p) => !p);
 
   return (
     <Box
       component="main"
       sx={{
-        position: "fixed",
-        inset: 0,
         width: "100vw",
         height: "100vh",
         display: "flex",
-        overflow: "hidden",
+        position: "relative",
+        overflow: "visible",
       }}
     >
-      {/* Left Banner */}
+      {/* ——— Left Banner (50%) ——— */}
       <Box
         sx={{
+          flex: 1,
           position: "relative",
-          width: { xs: "100%", lg: "55%" },
-          height: "100%",
+          display: "flex",
+          flexDirection: "column",
+          justifyContent: "center",
           background: "linear-gradient(180deg, #C945F3 0%, #9B41F7 100%)",
           px: { xs: 4, lg: 10 },
-          pt: { xs: 8, lg: 12 },
+          color: "common.white",
+          overflow: "hidden",
         }}
       >
-        <motion.div
-          variants={fadeIn}
-          initial="hidden"
-          animate="visible"
-          custom={0.2}
-        >
-          <Typography
-            variant="h4"
-            fontWeight={800}
-            color="common.white"
-            gutterBottom
-            sx={{ lineHeight: 1.4, maxWidth: 500 }}
-          >
-            {contents[activeIndex].title}
-          </Typography>
-          <Typography
-            variant="body1"
-            color="common.white"
-            sx={{
-              opacity: 0.85,
-              fontSize: "1rem",
-              lineHeight: 1.8,
-              maxWidth: 480,
-            }}
-            mb={4}
-          >
-            {contents[activeIndex].subtitle}
-          </Typography>
-        </motion.div>
-        <motion.div
-          variants={fadeIn}
-          initial="hidden"
-          animate="visible"
-          custom={0.4}
-        >
-          <Box sx={{ display: "flex", gap: 1 }}>
-            {[0, 1, 2].map((i) => (
-              <Box
-                key={i}
-                sx={{
-                  width: activeIndex === i ? 16 : 4,
-                  height: 4,
-                  borderRadius: activeIndex === i ? 2 : "50%",
-                  transition: "all 0.3s ease",
-                  bgcolor:
-                    activeIndex === i
-                      ? "common.white"
-                      : "rgba(255,255,255,0.4)",
-                }}
-              />
-            ))}
-          </Box>
-        </motion.div>
+        {/* Laptop mock-up nằm sau */}
         <motion.img
           src={MacBookPro}
           alt="Preview"
           variants={slideUp}
           initial="hidden"
           animate="visible"
+          transition={{ duration: 0.8 }}
           style={{
             position: "absolute",
-            bottom: 1,
-            right: -80,
-            marginLeft: "70px",
+            marginTop: 300,
+            right: { xs: -20, lg: -140 },
             width: "120%",
-            transform: "scale(1.2)",
+            maxWidth: 800,
             pointerEvents: "none",
+            willChange: "transform, opacity",
             zIndex: 1,
+            transform: "scale(1.5)",
           }}
         />
+
+        {/* Text & Dots */}
+        <Box sx={{ position: "relative", zIndex: 2, mb: { xs: 8, lg: 50 } }}>
+          <motion.div
+            variants={fadeIn}
+            initial="hidden"
+            animate="visible"
+            custom={0.2}
+            transition={{ duration: 0.8 }}
+            style={{ willChange: "transform, opacity" }}
+          >
+            <Typography
+              variant="h4"
+              fontWeight={800}
+              gutterBottom
+              sx={{ lineHeight: 1.4, maxWidth: 500 }}
+            >
+              {contents[activeIndex].title}
+            </Typography>
+            <Typography
+              variant="body1"
+              sx={{
+                opacity: 0.85,
+                fontSize: "1rem",
+                lineHeight: 1.8,
+                maxWidth: 480,
+              }}
+              mb={4}
+            >
+              {contents[activeIndex].subtitle}
+            </Typography>
+          </motion.div>
+
+          <motion.div
+            variants={fadeIn}
+            initial="hidden"
+            animate="visible"
+            custom={0.4}
+            transition={{ duration: 0.8 }}
+            style={{ willChange: "opacity" }}
+          >
+            <Box sx={{ display: "flex", gap: 1 }}>
+              {contents.map((_, idx) => (
+                <Box
+                  key={idx}
+                  sx={{
+                    width: activeIndex === idx ? 16 : 4,
+                    height: 4,
+                    borderRadius: activeIndex === idx ? 2 : "50%",
+                    bgcolor:
+                      activeIndex === idx
+                        ? "common.white"
+                        : "rgba(255,255,255,0.4)",
+                    transition: "all 0.3s ease",
+                  }}
+                />
+              ))}
+            </Box>
+          </motion.div>
+        </Box>
       </Box>
 
-      {/* Right Form */}
-
+      {/* ——— Right Form (50%) ——— */}
       <Box
         sx={{
-          width: { xs: "100%", lg: "45%" },
+          flex: 1,
+          position: "relative",
+          zIndex: 3,
           display: "flex",
           alignItems: "center",
           justifyContent: "center",
           bgcolor: "#0B0B0F",
           px: { xs: 4, lg: 10 },
-          zIndex: 2,
         }}
       >
         <motion.div
@@ -161,7 +172,12 @@ const RegisterPage = () => {
           initial="hidden"
           animate="visible"
           custom={0.5}
-          style={{ width: "100%", maxWidth: 420 }}
+          transition={{ duration: 0.8 }}
+          style={{
+            willChange: "transform, opacity",
+            width: "100%",
+            maxWidth: 420,
+          }}
         >
           <Typography
             variant="h6"
@@ -172,7 +188,6 @@ const RegisterPage = () => {
           >
             CineMax
           </Typography>
-
           <Typography
             variant="h4"
             color="common.white"
@@ -291,7 +306,7 @@ const RegisterPage = () => {
               },
               endAdornment: (
                 <InputAdornment position="end">
-                  <IconButton onClick={toggleConfirmPassword} edge="end">
+                  <IconButton onClick={toggleConfirm} edge="end">
                     {showConfirmPassword ? (
                       <VisibilityIcon sx={{ color: "rgba(255,255,255,0.6)" }} />
                     ) : (
@@ -306,7 +321,6 @@ const RegisterPage = () => {
             InputLabelProps={{ shrink: false }}
           />
 
-          {/* Register button */}
           <Button
             fullWidth
             variant="contained"
@@ -321,10 +335,15 @@ const RegisterPage = () => {
               "&:hover": { bgcolor: "#A251FF" },
             }}
           >
-            Login
+            Register
           </Button>
 
-          <Typography variant="body2" color="#fff" textAlign="center" mt={3}>
+          <Typography
+            variant="body2"
+            color="common.white"
+            textAlign="center"
+            mt={3}
+          >
             Already have an account?{" "}
             <Link href="/auth/login" underline="none" sx={{ color: "#9B76FF" }}>
               Login

@@ -1,12 +1,14 @@
-
 import { BrowserRouter } from "react-router-dom";
 import Router from "./routes";
+import ThemeProvider from "./context/UseTheme";
 
 function App() {
   return (
-    <BrowserRouter>
-      <Router />
-    </BrowserRouter>
+    <ThemeProvider>
+      <BrowserRouter>
+        <Router />
+      </BrowserRouter>
+    </ThemeProvider>
   );
 }
 

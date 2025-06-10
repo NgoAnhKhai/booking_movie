@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useContext, useState } from "react";
 import {
   Box,
   Typography,
@@ -7,281 +7,152 @@ import {
   ListItemText,
   ListItemIcon,
   Switch,
+  useTheme,
+  alpha,
 } from "@mui/material";
+import { ThemeContext } from "../context/UseTheme";
 
 const Sidebar = () => {
   const [selectedItem, setSelectedItem] = useState(null);
-  const [darkMode, setDarkMode] = useState(false);
+  const { isDark, toggleTheme } = useContext(ThemeContext);
+  const theme = useTheme();
 
-  const handleItemClick = (index) => {
-    setSelectedItem(index); // Cập nhật mục được chọn
-  };
+  /* ---------- helper cho màu ---------- */
+  const inactiveText = theme.palette.text.secondary;
+  const hoverBg = isDark ? "#2E2A32" : alpha(theme.palette.primary.main, 0.06);
+  const selectedBg = isDark ? "#2E2A32" : alpha("#9B41F7", 0.1);
+  const selectedText = theme.palette.text.primary;
 
-  const handleDarkModeToggle = () => {
-    setDarkMode(!darkMode);
-  };
+  const handleItemClick = (index) => setSelectedItem(index);
+
+  /* ---------- 1 hàm tiện làm style chung ---------- */
+  const itemSx = (index) => ({
+    borderLeft:
+      selectedItem === index ? `4px solid #9B41F7` : "4px solid transparent",
+    bgcolor: selectedItem === index ? selectedBg : "transparent",
+    "&:hover": {
+      bgcolor: hoverBg,
+      borderLeft: `4px solid #9B41F7`,
+    },
+    transition: "all .24s ease",
+    cursor: "pointer",
+    pl: "10px",
+  });
+
+  const txtSx = (index) => ({
+    fontWeight: selectedItem === index ? 600 : 400,
+    color: selectedItem === index ? selectedText : inactiveText,
+    transition: "color .24s ease",
+  });
 
   return (
     <Box
       sx={{
         width: 270,
         height: "100%",
-        bgcolor: "#1A161F",
-        color: "#78828A",
+        bgcolor: theme.palette.background.paper,
+        color: inactiveText,
         display: "flex",
         flexDirection: "column",
-        padding: "20px 10px",
+        p: "20px 10px",
+        borderRight: `1px solid ${alpha(theme.palette.text.primary, 0.08)}`,
+        transition: "background-color .3s ease",
       }}
     >
-      {/* Menu Title */}
+      {/* ---------- MENU title ---------- */}
       <Typography
         sx={{ ml: 2 }}
-        width={67}
-        height={24}
-        color="#9CA4AB"
-        fontWeight={300}
+        fontSize={12}
+        fontWeight={500}
+        color={inactiveText}
       >
         MENU
       </Typography>
 
-      {/* Menu Items */}
-      <List>
-        {/* Discovery */}
-        <ListItem
-          button
-          onClick={() => handleItemClick(1)}
-          sx={{
-            borderLeft: selectedItem === 1 ? "4px solid #9B41F7" : "none",
-            transition: "border-left 0.3s ease, background-color 0.3s ease",
-            "&:hover": {
-              backgroundColor: "#2E2A32",
-              borderLeft: "4px solid #9B41F7",
-            },
-          }}
-        >
-          <ListItemIcon>
-            <img
-              src={
-                selectedItem === 1
-                  ? "/sidebar/discover-click.png"
-                  : "/sidebar/discover.png"
-              }
-              alt="Discovery"
-              style={{ width: "24px", height: "24px" }}
-            />
-          </ListItemIcon>
-          <ListItemText
-            primary="Discovery"
-            sx={{
-              fontWeight: selectedItem === 1 ? "bold" : "normal",
-              color: selectedItem === 1 ? "white" : "#78828A",
-              transition: "color 0.3s ease",
-            }}
-          />
-        </ListItem>
-
-        {/* Top Rated */}
-        <ListItem
-          button
-          onClick={() => handleItemClick(2)}
-          sx={{
-            borderLeft: selectedItem === 2 ? "4px solid #9B41F7" : "none",
-            transition: "border-left 0.3s ease, background-color 0.3s ease",
-            "&:hover": {
-              backgroundColor: "#2E2A32",
-              borderLeft: "4px solid #9B41F7",
-            },
-          }}
-        >
-          <ListItemIcon>
-            <img
-              src={
-                selectedItem === 2
-                  ? "/sidebar/clock-click.png"
-                  : "/sidebar/clock.png"
-              }
-              alt="Top Rated"
-              style={{ width: "24px", height: "24px" }}
-            />
-          </ListItemIcon>
-          <ListItemText
-            primary="Top Rated"
-            sx={{
-              fontWeight: selectedItem === 2 ? "bold" : "normal",
-              color: selectedItem === 2 ? "white" : "#78828A",
-              transition: "color 0.3s ease",
-            }}
-          />
-        </ListItem>
-
-        {/* Coming Soon */}
-        <ListItem
-          button
-          onClick={() => handleItemClick(3)}
-          sx={{
-            borderLeft: selectedItem === 3 ? "4px solid #9B41f7" : "none",
-            transition: "border-left 0.3s ease, background-color 0.3s ease",
-            "&:hover": {
-              backgroundColor: "#2E2A32",
-              borderLeft: "4px solid #9B41F7",
-            },
-          }}
-        >
-          <ListItemIcon>
-            <img
-              src={
-                selectedItem === 3
-                  ? "/sidebar/timer-click.png"
-                  : "/sidebar/timer.png"
-              }
-              alt="Coming Soon"
-              style={{ width: "24px", height: "24px" }}
-            />
-          </ListItemIcon>
-          <ListItemText
-            primary="Coming Soon"
-            sx={{
-              fontWeight: selectedItem === 3 ? "bold" : "normal",
-              color: selectedItem === 3 ? "white" : "#78828A",
-              transition: "color 0.3s ease",
-            }}
-          />
-        </ListItem>
+      {/* ---------- MENU Items ---------- */}
+      <List dense disablePadding>
+        {[
+          { id: 1, label: "Discovery", icon: "discover" },
+          { id: 2, label: "Top Rated", icon: "clock" },
+          { id: 3, label: "Coming Soon", icon: "timer" },
+        ].map(({ id, label, icon }) => (
+          <ListItem
+            key={id}
+            onClick={() => handleItemClick(id)}
+            sx={itemSx(id)}
+          >
+            <ListItemIcon>
+              <img
+                src={
+                  selectedItem === id
+                    ? `/sidebar/${icon}-click${""}.png`
+                    : `/sidebar/${icon}.png`
+                }
+                width={24}
+                height={24}
+                alt={label}
+              />
+            </ListItemIcon>
+            <ListItemText primary={label} sx={txtSx(id)} />
+          </ListItem>
+        ))}
       </List>
 
-      {/* LIBRARY Section */}
-      <Box sx={{ mt: 3, ml: 2 }}>
-        <Typography color="#9CA4AB" fontWeight={300} width={67} height={24}>
+      {/* ---------- LIBRARY title ---------- */}
+      <Box mt={3} ml={2}>
+        <Typography fontSize={12} fontWeight={500} color={inactiveText}>
           LIBRARY
         </Typography>
       </Box>
 
-      <List>
-        {/* Recent Played */}
-        <ListItem
-          button
-          onClick={() => handleItemClick(4)}
-          sx={{
-            borderLeft: selectedItem === 4 ? "4px solid #9B41f7" : "none",
-            transition: "border-left 0.3s ease, background-color 0.3s ease",
-            "&:hover": {
-              backgroundColor: "#2E2A32",
-              borderLeft: "4px solid #9B41F7",
-            },
-          }}
-        >
-          <ListItemIcon>
-            <img
-              src={
-                selectedItem === 4
-                  ? "/sidebar/clock-click.png"
-                  : "/sidebar/clock.png"
-              }
-              alt="Recent Played"
-              style={{ width: "24px", height: "24px" }}
-            />
-          </ListItemIcon>
-          <ListItemText
-            primary="Recent Played"
-            sx={{
-              fontWeight: selectedItem === 4 ? "bold" : "normal",
-              color: selectedItem === 4 ? "white" : "#78828A",
-              transition: "color 0.3s ease",
-            }}
-          />
-        </ListItem>
-
-        {/* Download */}
-        <ListItem
-          button
-          onClick={() => handleItemClick(5)}
-          sx={{
-            borderLeft: selectedItem === 5 ? " 4px solid #9B41f7" : "none",
-            transition: "border-left 0.3s ease, background-color 0.3s ease",
-            "&:hover": {
-              backgroundColor: "#2E2A32",
-              borderLeft: "4px solid #9B41F7",
-            },
-          }}
-        >
-          <ListItemIcon>
-            <img
-              src={
-                selectedItem === 5
-                  ? "/sidebar/document-download-click.png"
-                  : "/sidebar/document-download.png"
-              }
-              alt="Download"
-              style={{ width: "24px", height: "24px" }}
-            />
-          </ListItemIcon>
-          <ListItemText
-            primary="Download"
-            sx={{
-              fontWeight: selectedItem === 5 ? "bold" : "normal",
-              color: selectedItem === 5 ? "white" : "#78828A",
-              transition: "color 0.3s ease",
-            }}
-          />
-        </ListItem>
-
-        {/* Settings */}
-        <ListItem
-          button
-          onClick={() => handleItemClick(6)}
-          sx={{
-            borderLeft: selectedItem === 6 ? "4px solid #9B41f7" : "none",
-            transition: "border-left 0.3s ease, background-color 0.3s ease",
-            "&:hover": {
-              backgroundColor: "#2E2A32",
-              borderLeft: "4px solid #9B41F7",
-            },
-          }}
-        >
-          <ListItemIcon>
-            <img
-              src={
-                selectedItem === 6
-                  ? "/sidebar/setting-2-click.png"
-                  : "/sidebar/setting-2.png"
-              }
-              alt="Settings"
-              style={{ width: "24px", height: "24px" }}
-            />
-          </ListItemIcon>
-          <ListItemText
-            primary="Setting"
-            sx={{
-              fontWeight: selectedItem === 6 ? "bold" : "normal",
-              color: selectedItem === 6 ? "white" : "#78828A",
-              transition: "color 0.3s ease",
-            }}
-          />
-        </ListItem>
+      {/* ---------- LIBRARY Items ---------- */}
+      <List dense disablePadding>
+        {[
+          { id: 4, label: "Recent Played", icon: "clock" },
+          { id: 5, label: "Download", icon: "document-download" },
+          { id: 6, label: "Setting", icon: "setting-2" },
+        ].map(({ id, label, icon }) => (
+          <ListItem
+            key={id}
+            onClick={() => handleItemClick(id)}
+            sx={itemSx(id)}
+          >
+            <ListItemIcon>
+              <img
+                src={
+                  selectedItem === id
+                    ? `/sidebar/${icon}-click${""}.png`
+                    : `/sidebar/${icon}.png`
+                }
+                width={24}
+                height={24}
+                alt={label}
+              />
+            </ListItemIcon>
+            <ListItemText primary={label} sx={txtSx(id)} />
+          </ListItem>
+        ))}
       </List>
 
-      {/* Dark Mode Toggle */}
-      <Box sx={{ marginTop: "auto" }}>
-        <List>
-          <ListItem>
+      {/* ---------- FOOTER: Toggle Dark Mode ---------- */}
+      <Box mt="auto">
+        <List dense disablePadding>
+          <ListItem sx={{ pl: 0 }}>
             <ListItemIcon>
               <img
                 src="/sidebar/moon.png"
+                width={24}
+                height={24}
                 alt="Dark Mode"
-                style={{ width: "24px", height: "24px" }}
               />
             </ListItemIcon>
-            <ListItemText primary="Dark Mode" sx={{ color: "#78828A" }} />
+            <ListItemText primary="Dark Mode" sx={{ color: inactiveText }} />
             <Switch
-              checked={darkMode}
-              onChange={handleDarkModeToggle}
+              checked={isDark}
+              onChange={toggleTheme}
               sx={{
-                "& .MuiSwitch-switchBase.Mui-checked": {
-                  color: "#9B41F7",
-                },
-                "& .MuiSwitch-track": {
-                  backgroundColor: "#9B41F7",
-                },
+                "& .MuiSwitch-switchBase.Mui-checked": { color: "#9B41F7" },
+                "& .MuiSwitch-track": { backgroundColor: "#9B41F7" },
               }}
             />
           </ListItem>
