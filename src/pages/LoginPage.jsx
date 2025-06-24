@@ -8,6 +8,7 @@ import {
   IconButton,
   InputAdornment,
   Link,
+  Alert,
 } from "@mui/material";
 import GoogleIcon from "@mui/icons-material/Google";
 import FacebookIcon from "@mui/icons-material/Facebook";
@@ -16,11 +17,22 @@ import VisibilityIcon from "@mui/icons-material/Visibility";
 import { motion } from "framer-motion";
 import { fadeIn } from "../animations/motionVariants";
 import MacBookPro from "/images/register/MacBook Pro 16.svg";
+import { useAuth } from "../context/AuthContext";
+import { useNavigate } from "react-router-dom";
 
 const LoginPage = () => {
   const [showPassword, setShowPassword] = useState(false);
   const togglePassword = () => setShowPassword((prev) => !prev);
   const [activeIndex, setActiveIndex] = useState(0);
+
+  // Đổi sang email
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
+  const [error, setError] = useState("");
+  const [loading, setLoading] = useState(false);
+
+  const { signin } = useAuth();
+  const navigate = useNavigate();
 
   const contents = [
     {
@@ -49,12 +61,26 @@ const LoginPage = () => {
     return () => clearInterval(iv);
   }, []);
 
+  // Xử lý submit login
+  const handleLogin = async (e) => {
+    e.preventDefault();
+    setError("");
+    setLoading(true);
+    try {
+      await signin(email, password);
+      navigate("/");
+    } catch (err) {
+      setError(err.message || "Login failed! Please try again.");
+    } finally {
+      setLoading(false);
+    }
+  };
+
   return (
     <Box
       component="main"
       sx={{
         width: "100%",
-        height: "",
         display: "flex",
         position: "relative",
         overflow: "visible",
@@ -74,7 +100,7 @@ const LoginPage = () => {
           overflow: "hidden",
         }}
       >
-        {/* Laptop mock-up nằm phía sau, tràn sâu hơn */}
+        {/* Laptop mock-up */}
         <Box
           component="img"
           src={MacBookPro}
@@ -90,8 +116,6 @@ const LoginPage = () => {
             zIndex: 1,
           }}
         />
-
-        {/* Text & Dots luôn nằm trên laptop */}
         <Box sx={{ position: "relative", zIndex: 2, mb: { xs: 10, md: 50 } }}>
           <motion.div
             variants={fadeIn}
@@ -115,7 +139,6 @@ const LoginPage = () => {
               {contents[activeIndex].subtitle}
             </Typography>
           </motion.div>
-
           <Box sx={{ display: "flex", gap: 1, mt: 1 }}>
             {contents.map((_, idx) => (
               <Box
@@ -135,13 +158,12 @@ const LoginPage = () => {
           </Box>
         </Box>
       </Box>
-
       {/* ——— Right Form ——— */}
       <Box
         sx={{
           flex: 1,
           position: "relative",
-          zIndex: 3, // cao nhất để đè lên laptop
+          zIndex: 3,
           display: "flex",
           alignItems: "center",
           justifyContent: "center",
@@ -169,6 +191,13 @@ const LoginPage = () => {
             Hey there, <br /> welcome back
           </Typography>
 
+          {/* Hiển thị lỗi nếu có */}
+          {error && (
+            <Alert severity="error" sx={{ mb: 2 }}>
+              {error}
+            </Alert>
+          )}
+
           {/* Social login */}
           <Button
             fullWidth
@@ -182,6 +211,7 @@ const LoginPage = () => {
               bgcolor: "#1F1F25",
               "&:hover": { bgcolor: "#2A2A31" },
             }}
+            disabled
           >
             Login with Google
           </Button>
@@ -197,6 +227,7 @@ const LoginPage = () => {
               bgcolor: "#1F1F25",
               "&:hover": { bgcolor: "#2A2A31" },
             }}
+            disabled
           >
             Login with Facebook
           </Button>
@@ -216,20 +247,22 @@ const LoginPage = () => {
             </Typography>
           </Divider>
 
-          {/* Full Name */}
+          {/* Email */}
           <Typography
             variant="subtitle2"
             color="rgba(255,255,255,0.6)"
             fontWeight={500}
           >
-            Full Name
+            Email Address
           </Typography>
           <TextField
             fullWidth
-            label="Enter your name"
-            placeholder="Enter your name"
+            label="Enter your email"
+            placeholder="Enter your email"
             variant="outlined"
             margin="normal"
+            value={email}
+            onChange={(e) => setEmail(e.target.value)}
             InputProps={{
               sx: {
                 color: "common.white",
@@ -239,6 +272,7 @@ const LoginPage = () => {
               },
             }}
             InputLabelProps={{ sx: { color: "rgba(255,255,255,0.6)" } }}
+            type="email"
           />
 
           {/* Password */}
@@ -257,6 +291,8 @@ const LoginPage = () => {
             variant="outlined"
             type={showPassword ? "text" : "password"}
             margin="normal"
+            value={password}
+            onChange={(e) => setPassword(e.target.value)}
             InputProps={{
               sx: {
                 color: "common.white",
@@ -291,21 +327,25 @@ const LoginPage = () => {
             </Link>
           </Box>
 
-          <Button
-            fullWidth
-            variant="contained"
-            sx={{
-              py: 1.6,
-              textTransform: "none",
-              fontWeight: 600,
-              borderRadius: 999,
-              fontSize: "1rem",
-              bgcolor: "#9B41F7",
-              "&:hover": { bgcolor: "#A251FF" },
-            }}
-          >
-            Login
-          </Button>
+          <form onSubmit={handleLogin} autoComplete="off">
+            <Button
+              fullWidth
+              type="submit"
+              variant="contained"
+              sx={{
+                py: 1.6,
+                textTransform: "none",
+                fontWeight: 600,
+                borderRadius: 999,
+                fontSize: "1rem",
+                bgcolor: "#9B41F7",
+                "&:hover": { bgcolor: "#A251FF" },
+              }}
+              disabled={loading}
+            >
+              {loading ? "Logging in..." : "Login"}
+            </Button>
+          </form>
 
           <Typography
             variant="body2"

@@ -15,13 +15,14 @@ import AccountCircleIcon from "@mui/icons-material/AccountCircle";
 import ArrowDropDownIcon from "@mui/icons-material/ArrowDropDown";
 import "inter-ui";
 import { ThemeContext } from "../context/UseTheme";
+import { useNavigate } from "react-router-dom";
 const Header = () => {
   const [anchorEl, setAnchorEl] = useState(null);
   const [isFocused, setIsFocused] = useState(false);
   const [searchQuery, setSearchQuery] = useState("");
   const theme = useTheme();
   const { isDark } = useContext(ThemeContext);
-
+  const navigate = useNavigate();
   const handleSearchChange = (event) => {
     setSearchQuery(event.target.value);
   };
@@ -32,6 +33,10 @@ const Header = () => {
 
   const handleMenuClose = () => {
     setAnchorEl(null);
+  };
+  const handleLogout = () => {
+    // Xử lý đăng xuất ở đây
+    navigate("/auth/login");
   };
 
   return (
@@ -172,7 +177,7 @@ const Header = () => {
         >
           <MenuItem onClick={handleMenuClose}>Profile</MenuItem>
           <MenuItem onClick={handleMenuClose}>Settings</MenuItem>
-          <MenuItem onClick={handleMenuClose}>Logout</MenuItem>
+          <MenuItem onClick={handleLogout}>Logout</MenuItem>
         </Menu>
       </Box>
     </Box>

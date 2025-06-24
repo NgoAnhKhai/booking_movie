@@ -1,13 +1,13 @@
 import apiService from "../api/apiService";
 
-export const getListMovie = async () => {
+export const GetPopularMovies = async () => {
   try {
     const response = await apiService.get(
-      "/api/method/cinema.api.movie.get_all_movies"
+      `/api/method/cinema.api.movie.get_top_movies?limit=10`
     );
     return response;
   } catch (error) {
-    console.error("Error fetching movie list:", error);
+    console.log("Error fetching popular movies:", error);
     throw error;
   }
 };

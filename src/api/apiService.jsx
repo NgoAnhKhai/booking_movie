@@ -10,36 +10,14 @@ const apiService = axios.create({
 
 apiService.interceptors.request.use(
   (request) => {
-    const token = localStorage.getItem("token");
-    if (token) {
-      request.headers["Authorization"] = `Bearer ${token}`;
+    const sid = localStorage.getItem("sid");
+    if (sid) {
+      request.headers["X-Frappe-Session"] = sid;
     }
-    return request;
-  },
-  (error) => {
-    return Promise.reject(error);
-  }
-);
-
-apiService.interceptors.response.use(
-  (response) => {
-    return response.data;
-  },
-  (error) => {
-    if (error.response && error.response.status === 403) {
-      localStorage.removeItem("token");
-      window.location.href = "/login";
-    }
-    return Promise.reject(error);
-  }
-);
-
-apiService.interceptors.request.use(
-  (request) => {
     console.log("Start Request", request);
     return request;
   },
-  function (error) {
+  (error) => {
     console.log("REQUEST ERROR", { error });
     return Promise.reject(error);
   }
@@ -48,11 +26,20 @@ apiService.interceptors.request.use(
 apiService.interceptors.response.use(
   (response) => {
     console.log("Response", response);
+
     return response.data;
   },
-  function (error) {
+  (error) => {
     console.log("RESPONSE ERROR", { error });
-    const message = error.response?.data?.errors?.message || "Unknown Error";
+    if (error.response && error.response.status === 403) {
+      localStorage.removeItem("sid");
+      localStorage.removeItem("user");
+      localStorage.removeItem("roles");
+    }
+    const message =
+      error.response?.data?.message ||
+      error.response?.data?.errors?.message ||
+      "Unknown Error";
     return Promise.reject({ message });
   }
 );

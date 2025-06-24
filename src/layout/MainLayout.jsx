@@ -26,7 +26,6 @@ const MainLayout = () => {
           display: "flex",
           flexDirection: "row",
           position: "sticky",
-          bgcolor: theme.palette.background.paper,
           minHeight: "100vh",
           height: "100%",
           zIndex: 1000,
@@ -40,6 +39,11 @@ const MainLayout = () => {
             bgcolor: theme.palette.background.default,
             width: "100%",
             overflowY: "auto",
+            pl: { xs: 1, md: 4 },
+            pr: 0,
+            pt: 0,
+            pb: 0,
+            minHeight: "100vh",
           }}
         >
           <Outlet />

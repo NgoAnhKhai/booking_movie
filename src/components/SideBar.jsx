@@ -11,148 +11,198 @@ import {
   alpha,
 } from "@mui/material";
 import { ThemeContext } from "../context/UseTheme";
+import { useNavigate } from "react-router-dom";
 
 const Sidebar = () => {
-  const [selectedItem, setSelectedItem] = useState(null);
+  const [selectedItem, setSelectedItem] = useState(1);
   const { isDark, toggleTheme } = useContext(ThemeContext);
   const theme = useTheme();
+  const navigate = useNavigate();
 
-  /* ---------- helper cho màu ---------- */
-  const inactiveText = theme.palette.text.secondary;
-  const hoverBg = isDark ? "#2E2A32" : alpha(theme.palette.primary.main, 0.06);
-  const selectedBg = isDark ? "#2E2A32" : alpha("#9B41F7", 0.1);
-  const selectedText = theme.palette.text.primary;
+  const purple = "#9B41F7";
+  const neonGlow = `0 0 8px ${alpha(purple, 0.9)}, 0 0 16px ${alpha(
+    purple,
+    0.3
+  )}`;
+  const hoverBg = isDark
+    ? alpha(purple, 0.11)
+    : alpha(theme.palette.primary.main, 0.06);
+  const selectedBg = isDark
+    ? `linear-gradient(90deg, ${alpha(purple, 0.09)} 60%, transparent)`
+    : alpha("#9B41F7", 0.07);
 
-  const handleItemClick = (index) => setSelectedItem(index);
+  // Menu và Library items
+  const menuItems = [
+    { id: 1, label: "Discovery", icon: "discover", path: "/" },
+    { id: 2, label: "Top Rated", icon: "clock", path: "/top-rated" },
+    { id: 3, label: "Coming Soon", icon: "timer", path: "/coming-soon" },
+  ];
+  const libraryItems = [
+    { id: 4, label: "Recent Played", icon: "clock", path: "/recent-played" },
+    { id: 5, label: "Download", icon: "document-download", path: "/download" },
+    { id: 6, label: "Setting", icon: "setting-2", path: "/setting" },
+  ];
 
-  /* ---------- 1 hàm tiện làm style chung ---------- */
-  const itemSx = (index) => ({
-    borderLeft:
-      selectedItem === index ? `4px solid #9B41F7` : "4px solid transparent",
-    bgcolor: selectedItem === index ? selectedBg : "transparent",
+  // Xử lý click
+  const handleItemClick = (item) => {
+    setSelectedItem(item.id);
+    navigate(item.path);
+  };
+
+  // Style cho item
+  const itemSx = (id) => ({
+    borderRadius: "14px",
+    marginBottom: 2,
+    boxShadow: selectedItem === id ? neonGlow : "0 0 0px transparent",
+    bgcolor: selectedItem === id ? selectedBg : "transparent",
     "&:hover": {
       bgcolor: hoverBg,
-      borderLeft: `4px solid #9B41F7`,
+      boxShadow: neonGlow,
+      transition: "all .18s cubic-bezier(.6,.2,.2,1)",
     },
-    transition: "all .24s ease",
+    borderLeft:
+      selectedItem === id ? `4px solid ${purple}` : "4px solid transparent",
+    transition: "all .23s cubic-bezier(.6,.2,.2,1)",
     cursor: "pointer",
-    pl: "10px",
+    pl: "12px",
+    py: "6px",
+    alignItems: "center",
+    minHeight: 52,
+    display: "flex",
   });
 
-  const txtSx = (index) => ({
-    fontWeight: selectedItem === index ? 600 : 400,
-    color: selectedItem === index ? selectedText : inactiveText,
-    transition: "color .24s ease",
+  // Style cho text
+  const txtSx = (id) => ({
+    fontWeight: selectedItem === id ? 600 : 400,
+    color: selectedItem === id ? "#fff" : theme.palette.text.secondary,
+    letterSpacing: 0.2,
+    textShadow: selectedItem === id ? `0 0 6px ${alpha(purple, 0.8)}` : "none",
+    fontSize: 17,
+    ml: 1,
+    transition: "color .23s cubic-bezier(.6,.2,.2,1), text-shadow .23s",
+  });
+
+  // Style cho icon
+  const iconSx = (id) => ({
+    filter:
+      selectedItem === id
+        ? `drop-shadow(0 0 6px ${purple}) brightness(1.2)`
+        : `drop-shadow(0 0 1px ${purple})`,
+    transition: "filter .25s cubic-bezier(.6,.2,.2,1)",
+    width: 28,
+    height: 28,
   });
 
   return (
     <Box
       sx={{
         width: 270,
+        borderRadius: "32px",
         height: "100%",
-        bgcolor: theme.palette.background.paper,
-        color: inactiveText,
+        bgcolor: isDark ? "rgba(18,17,27,0.97)" : "rgba(245,245,255,0.96)",
+        color: theme.palette.text.secondary,
         display: "flex",
         flexDirection: "column",
-        p: "20px 10px",
-        borderRight: `1px solid ${alpha(theme.palette.text.primary, 0.08)}`,
-        transition: "background-color .3s ease",
+        p: "28px 16px 16px 18px",
+        boxShadow:
+          "0 4px 24px 0 rgba(80,30,160,0.10), 0 1.5px 6px 0 rgba(140,0,255,0.07)",
+        border: `1px solid ${alpha(theme.palette.text.primary, 0.05)}`,
+        transition: "background-color .35s cubic-bezier(.6,.2,.2,1)",
+        backdropFilter: "blur(2px)",
       }}
     >
-      {/* ---------- MENU title ---------- */}
+      {/* MENU title */}
       <Typography
-        sx={{ ml: 2 }}
-        fontSize={12}
-        fontWeight={500}
-        color={inactiveText}
+        sx={{ ml: 2, mb: 1, opacity: 0.86, letterSpacing: 1.5 }}
+        fontSize={13}
+        fontWeight={700}
       >
         MENU
       </Typography>
 
-      {/* ---------- MENU Items ---------- */}
+      {/* MENU Items */}
       <List dense disablePadding>
-        {[
-          { id: 1, label: "Discovery", icon: "discover" },
-          { id: 2, label: "Top Rated", icon: "clock" },
-          { id: 3, label: "Coming Soon", icon: "timer" },
-        ].map(({ id, label, icon }) => (
+        {menuItems.map((item) => (
           <ListItem
-            key={id}
-            onClick={() => handleItemClick(id)}
-            sx={itemSx(id)}
+            key={item.id}
+            onClick={() => handleItemClick(item)}
+            sx={itemSx(item.id)}
           >
-            <ListItemIcon>
+            <ListItemIcon sx={{ minWidth: 38 }}>
               <img
-                src={
-                  selectedItem === id
-                    ? `/sidebar/${icon}-click${""}.png`
-                    : `/sidebar/${icon}.png`
-                }
-                width={24}
-                height={24}
-                alt={label}
+                src={`/sidebar/${item.icon}.png`}
+                alt={item.label}
+                style={iconSx(item.id)}
               />
             </ListItemIcon>
-            <ListItemText primary={label} sx={txtSx(id)} />
+            <ListItemText primary={item.label} sx={txtSx(item.id)} />
           </ListItem>
         ))}
       </List>
 
-      {/* ---------- LIBRARY title ---------- */}
-      <Box mt={3} ml={2}>
-        <Typography fontSize={12} fontWeight={500} color={inactiveText}>
+      {/* LIBRARY title */}
+      <Box mt={5} ml={2} mb={1}>
+        <Typography
+          fontSize={13}
+          fontWeight={700}
+          opacity={0.8}
+          letterSpacing={1.5}
+        >
           LIBRARY
         </Typography>
       </Box>
 
-      {/* ---------- LIBRARY Items ---------- */}
+      {/* LIBRARY Items */}
       <List dense disablePadding>
-        {[
-          { id: 4, label: "Recent Played", icon: "clock" },
-          { id: 5, label: "Download", icon: "document-download" },
-          { id: 6, label: "Setting", icon: "setting-2" },
-        ].map(({ id, label, icon }) => (
+        {libraryItems.map((item) => (
           <ListItem
-            key={id}
-            onClick={() => handleItemClick(id)}
-            sx={itemSx(id)}
+            key={item.id}
+            onClick={() => handleItemClick(item)}
+            sx={itemSx(item.id)}
           >
-            <ListItemIcon>
+            <ListItemIcon sx={{ minWidth: 38 }}>
               <img
-                src={
-                  selectedItem === id
-                    ? `/sidebar/${icon}-click${""}.png`
-                    : `/sidebar/${icon}.png`
-                }
-                width={24}
-                height={24}
-                alt={label}
+                src={`/sidebar/${item.icon}.png`}
+                alt={item.label}
+                style={iconSx(item.id)}
               />
             </ListItemIcon>
-            <ListItemText primary={label} sx={txtSx(id)} />
+            <ListItemText primary={item.label} sx={txtSx(item.id)} />
           </ListItem>
         ))}
       </List>
 
-      {/* ---------- FOOTER: Toggle Dark Mode ---------- */}
-      <Box mt="auto">
+      {/* Toggle Dark Mode */}
+      <Box mt="auto" mb={1}>
         <List dense disablePadding>
           <ListItem sx={{ pl: 0 }}>
-            <ListItemIcon>
+            <ListItemIcon sx={{ minWidth: 38 }}>
               <img
                 src="/sidebar/moon.png"
-                width={24}
-                height={24}
                 alt="Dark Mode"
+                style={{
+                  filter: isDark
+                    ? `drop-shadow(0 0 8px ${purple}) brightness(1.4)`
+                    : "none",
+                  width: 26,
+                  height: 26,
+                }}
               />
             </ListItemIcon>
-            <ListItemText primary="Dark Mode" sx={{ color: inactiveText }} />
+            <ListItemText
+              primary="Dark Mode"
+              sx={{
+                color: isDark ? "#fff" : theme.palette.text.secondary,
+                fontWeight: 500,
+                fontSize: 15,
+              }}
+            />
             <Switch
               checked={isDark}
               onChange={toggleTheme}
               sx={{
-                "& .MuiSwitch-switchBase.Mui-checked": { color: "#9B41F7" },
-                "& .MuiSwitch-track": { backgroundColor: "#9B41F7" },
+                "& .MuiSwitch-switchBase.Mui-checked": { color: purple },
+                "& .MuiSwitch-track": { backgroundColor: purple },
               }}
             />
           </ListItem>

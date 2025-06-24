@@ -1,13 +1,13 @@
 import apiService from "../api/apiService";
 
-export const getListMovie = async () => {
+export const getAllGenres = async () => {
   try {
     const response = await apiService.get(
-      "/api/method/cinema.api.movie.get_all_movies"
+      "/api/method/cinema.api.genre.get_all_genres"
     );
     return response;
   } catch (error) {
-    console.error("Error fetching movie list:", error);
+    console.log("Error fetching all genres:", error);
     throw error;
   }
 };
