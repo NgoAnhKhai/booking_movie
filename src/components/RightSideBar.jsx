@@ -12,20 +12,25 @@ import StarIcon from "@mui/icons-material/Star";
 import { GetPopularMovies } from "../services/GetPopularMovies";
 import { getAllGenres } from "../services/GetAllGenres";
 
+import PopUpMovieDetail from "./movie/PopupMovieDetail";
+import { getDetailMovie } from "../services/GetDetailMovie";
+
 const RightSidebar = () => {
   const [topMovies, setTopMovies] = useState([]);
   const [genres, setGenres] = useState([]);
   const [loading, setLoading] = useState(true);
   const [showAll, setShowAll] = useState(false);
 
+  // Popup state
+  const [openDetail, setOpenDetail] = useState(false);
+  const [movieDetail, setMovieDetail] = useState(null);
+
   useEffect(() => {
     const fetchData = async () => {
       setLoading(true);
       try {
-        // Fetch top movies
         const moviesRes = await GetPopularMovies();
         setTopMovies(moviesRes.data || []);
-        // Fetch genres
         const genresRes = await getAllGenres();
         setGenres(genresRes.data || []);
       } catch (err) {
@@ -38,6 +43,21 @@ const RightSidebar = () => {
     };
     fetchData();
   }, []);
+
+  const handleCardClick = async (movie) => {
+    try {
+      setOpenDetail(true);
+      setMovieDetail(null);
+
+      const detail = await getDetailMovie(movie.title);
+      console.log("Movie detail:", detail.data);
+
+      setMovieDetail(detail.data);
+    } catch (err) {
+      console.error("Error fetching movie detail:", err);
+      setMovieDetail(null);
+    }
+  };
 
   return (
     <Box sx={{ width: 340, px: 2, pt: 3 }}>
@@ -62,7 +82,23 @@ const RightSidebar = () => {
               </Box>
             </Box>
           ) : (
-            <Box key={movie.name} display="flex" alignItems="center" gap={2}>
+            <Box
+              key={movie.name}
+              display="flex"
+              alignItems="center"
+              gap={2}
+              sx={{
+                cursor: "pointer",
+                transition: "background .2s",
+                borderRadius: 2,
+                "&:hover": {
+                  background: "#181A43FF",
+                  boxShadow: 3,
+                  transform: "translateY(-2px) scale(1.03)",
+                },
+              }}
+              onClick={() => handleCardClick(movie)}
+            >
               <Avatar
                 variant="rounded"
                 src={movie.image_vertical}
@@ -162,11 +198,24 @@ const RightSidebar = () => {
                 fontWeight: 600,
                 fontSize: 15,
                 border: "none",
+                cursor: "pointer",
+                transition: "background .2s, color .2s",
+                "&:hover": {
+                  bgcolor: "#28293e",
+                  color: "#C77DFF",
+                },
               }}
             />
           )
         )}
       </Box>
+
+      {/* Popup detail movie */}
+      <PopUpMovieDetail
+        open={openDetail}
+        data={movieDetail}
+        onClose={() => setOpenDetail(false)}
+      />
     </Box>
   );
 };

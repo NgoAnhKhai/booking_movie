@@ -12,6 +12,7 @@ import ComingSoonPage from "../pages/ComingSoonPage";
 import SettingPage from "../pages/SettingPage";
 import RecentPlayerPage from "../pages/RecentPlayerPage";
 import DownloadPage from "../pages/DownloadPage";
+import WatchingPage from "../pages/WatchingPage";
 const Router = () => {
   return (
     <Routes>
@@ -28,6 +29,10 @@ const Router = () => {
         <Route path="/download" element={<DownloadPage />} />
         <Route path="/setting" element={<SettingPage />} />
       </Route>
+      <Route
+        path="/movie/watch/:movie_id/:episode_id"
+        element={<WatchingPage />}
+      />
     </Routes>
   );
 };
