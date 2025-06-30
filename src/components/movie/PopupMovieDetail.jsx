@@ -14,8 +14,13 @@ import DownloadIcon from "@mui/icons-material/Download";
 import AddIcon from "@mui/icons-material/Add";
 import StarIcon from "@mui/icons-material/Star";
 import { useNavigate } from "react-router-dom";
-import { useState } from "react";
+import { motion, AnimatePresence } from "framer-motion";
 import EpisodePopup from "./PopupEpisodes";
+import { useState } from "react";
+import { formatMediaUrl } from "../../utils/formatMediaUrl";
+import { getEpisodes } from "../../services/GetEpisodes";
+import formatDuration from "../../utils/formatDuration";
+import ClampText from "../ClampText";
 
 export default function PopUpMovieDetail({ open, data, onClose }) {
   if (!data) return null;
@@ -31,29 +36,37 @@ export default function PopUpMovieDetail({ open, data, onClose }) {
     release_date,
     is_premium,
     name,
+    duration,
   } = data;
   const navigate = useNavigate();
-
   const [episodeOpen, setEpisodeOpen] = useState(false);
-
+  const [isHover, setIsHover] = useState(false);
+  const trailerUrl = formatMediaUrl(trailer);
+  const durationFormat = formatDuration(duration);
   const releaseYear = release_date ? new Date(release_date).getFullYear() : "";
-  const duration = "2g 11ph";
 
-  // Xem tập đầu
-  const handleStartWatching = () => {
+  // Cập nhật: Xem tập đầu tiên
+  const handleStartWatching = async () => {
     if (!name) return;
-    onClose && onClose();
-    navigate(`/movie/watch/${name}`);
+    try {
+      const res = await getEpisodes(name);
+      console.log("First episode response:", res.data);
+
+      const episodes = res.data;
+      const firstEp = episodes[0];
+      onClose && onClose();
+      navigate(`/watch/movie/${name}/episode/${firstEp.name}`);
+    } catch (err) {
+      console.error("Error fetching first episode:", err);
+      alert("Không thể tải tập phim đầu tiên!");
+    }
   };
 
-  // Mở popup tập phim
   const handleShowEpisodes = () => setEpisodeOpen(true);
 
-  // Khi chọn một tập từ EpisodePopup
   const handleSelectEpisode = (ep) => {
     setEpisodeOpen(false);
     onClose && onClose();
-    // Truyền info tập qua state (hoặc query nếu muốn)
     navigate(`/movie/watch/${name}`, { state: { episode: ep } });
   };
 
@@ -66,12 +79,14 @@ export default function PopUpMovieDetail({ open, data, onClose }) {
             position: "fixed",
             top: 0,
             left: 0,
-            width: "100%",
-            height: "100%",
+            width: "100vw",
+            height: "100vh",
             bgcolor: "rgba(0,0,0,0.65)",
             display: "flex",
-            alignItems: "center",
+            alignItems: "flex-start",
             justifyContent: "center",
+            pt: { xs: 9, md: 10 },
+            overflowY: "auto",
             backdropFilter: "blur(4px)",
           }}
           onClick={onClose}
@@ -85,14 +100,27 @@ export default function PopUpMovieDetail({ open, data, onClose }) {
               bgcolor: "#191924",
               position: "relative",
               boxShadow: 24,
+              maxHeight: { xs: "calc(100vh - 64px)", md: "calc(100vh - 96px)" },
+              display: "flex",
+              flexDirection: "column",
             }}
           >
-            {/* Video trailer hoặc fallback là ảnh horizontal */}
-            <Box sx={{ position: "relative", height: 440, overflow: "hidden" }}>
-              {trailer ? (
+            {/* Khu vực video hoặc ảnh */}
+            <Box
+              sx={{
+                position: "relative",
+                height: 440,
+                overflow: "hidden",
+                cursor: "pointer",
+                userSelect: "none",
+              }}
+              onMouseEnter={() => setIsHover(true)}
+              onMouseLeave={() => setIsHover(false)}
+            >
+              {trailerUrl ? (
                 <video
-                  key={trailer}
-                  src={trailer}
+                  key={trailerUrl}
+                  src={trailerUrl}
                   poster={image_horizontal}
                   autoPlay
                   muted
@@ -111,6 +139,7 @@ export default function PopUpMovieDetail({ open, data, onClose }) {
                   style={{ width: "100%", height: "100%", objectFit: "cover" }}
                 />
               )}
+
               {/* Gradient mờ lên trên */}
               <Box
                 sx={{
@@ -120,9 +149,10 @@ export default function PopUpMovieDetail({ open, data, onClose }) {
                   bottom: 0,
                   height: "44%",
                   background:
-                    "linear-gradient(to top, #191924 25%, rgba(25,25,36,0.01) 100%)",
+                    "linear-gradient(to top, #191924 39%, rgba(25,25,36,0.01) 100%)",
                 }}
               />
+
               {/* Nút đóng */}
               <IconButton
                 onClick={onClose}
@@ -137,107 +167,129 @@ export default function PopUpMovieDetail({ open, data, onClose }) {
               >
                 <CloseIcon />
               </IconButton>
-              {/* Tiêu đề to */}
-              <Typography
-                variant="h2"
-                fontWeight={700}
-                sx={{
-                  color: "#fff",
+
+              {/* TITLE & ACTIONS */}
+              <motion.div
+                initial={false}
+                animate={{
                   position: "absolute",
                   left: 32,
-                  bottom: 120,
-                  fontSize: 54,
-                  lineHeight: 1.1,
-                  letterSpacing: 2,
-                  textShadow: "0 3px 24px #000, 0 1px 2px #000",
-                }}
-              >
-                {title}
-              </Typography>
-              {/* Action buttons nằm dưới title, đè lên video */}
-              <Stack
-                direction="row"
-                gap={2}
-                sx={{
-                  position: "absolute",
-                  left: 32,
-                  bottom: 58,
                   zIndex: 2,
-                  alignItems: "center",
-                  "& button, & .MuiIconButton-root": {
-                    boxShadow: "0 2px 12px 0 #0006",
-                  },
+                  width: "auto",
+                  display: "flex",
+                  flexDirection: "column",
+                  alignItems: "flex-start",
+                  bottom: isHover ? 36 : 18,
+                  gap: isHover ? 12 : 24,
+                  transition: { type: "spring", stiffness: 340, damping: 45 },
                 }}
               >
-                <Button
-                  variant="contained"
-                  size="large"
-                  startIcon={<PlayArrowIcon />}
-                  sx={{
-                    borderRadius: 3,
+                <motion.div
+                  initial={false}
+                  animate={{
+                    fontSize: isHover ? 54 : 36,
+                    color: "#fff",
                     fontWeight: 700,
-                    fontSize: 18,
-                    px: 3,
-                    background: "#B43FEB",
-                    color: "#fff",
-                    "&:hover": {
-                      background: "#9B41F7",
-                    },
-                  }}
-                  onClick={handleStartWatching}
-                >
-                  BẮT ĐẦU XEM
-                </Button>
-                <Button
-                  variant="contained"
-                  size="large"
-                  sx={{
-                    borderRadius: 3,
-                    fontWeight: 700,
-                    fontSize: 18,
-                    px: 3,
-                    background: "#22223b",
-                    color: "#fff",
-                    "&:hover": { background: "#191924" },
-                  }}
-                  onClick={handleShowEpisodes}
-                >
-                  EPISODE
-                </Button>
-                <IconButton
-                  sx={{
-                    bgcolor: "#191924",
-                    color: "#fff",
-                    border: "1px solid #333",
-                    "&:hover": { bgcolor: "#232335" },
+                    letterSpacing: 2,
+                    lineHeight: 1.1,
+                    textShadow: "0 3px 24px #000, 0 1px 2px #000",
+                    y: 0,
+                    marginBottom: isHover ? 6 : 0,
+                    transition: { type: "spring", stiffness: 320, damping: 26 },
                   }}
                 >
-                  <AddIcon />
-                </IconButton>
-                <IconButton
-                  sx={{
-                    bgcolor: "#191924",
-                    color: "#fff",
-                    border: "1px solid #333",
-                    "&:hover": { bgcolor: "#232335" },
-                  }}
-                >
-                  <DownloadIcon />
-                </IconButton>
-              </Stack>
+                  {title}
+                </motion.div>
+                {/* Hàng action btn - chỉ hiển thị khi hover */}
+                <AnimatePresence>
+                  {isHover && (
+                    <motion.div
+                      key="actions"
+                      initial={{ opacity: 0, y: 28 }}
+                      animate={{
+                        opacity: 1,
+                        y: 0,
+                        transition: { delay: 0.07, duration: 0.33 },
+                      }}
+                      exit={{
+                        opacity: 0,
+                        y: 28,
+                        transition: { duration: 0.19 },
+                      }}
+                      style={{ display: "flex", gap: 12, alignItems: "center" }}
+                    >
+                      <Button
+                        variant="contained"
+                        size="large"
+                        startIcon={<PlayArrowIcon />}
+                        sx={{
+                          borderRadius: 3,
+                          fontWeight: 700,
+                          fontSize: 18,
+                          px: 3,
+                          background: "#B43FEB",
+                          color: "#fff",
+                          "&:hover": {
+                            background: "#9B41F7",
+                          },
+                        }}
+                        onClick={handleStartWatching}
+                      >
+                        BẮT ĐẦU XEM
+                      </Button>
+                      <Button
+                        variant="contained"
+                        size="large"
+                        sx={{
+                          borderRadius: 3,
+                          fontWeight: 700,
+                          fontSize: 18,
+                          px: 3,
+                          background: "#22223b",
+                          color: "#fff",
+                          "&:hover": { background: "#191924" },
+                        }}
+                        onClick={handleShowEpisodes}
+                      >
+                        EPISODE
+                      </Button>
+                      <IconButton
+                        sx={{
+                          bgcolor: "#191924",
+                          color: "#fff",
+                          border: "1px solid #333",
+                          "&:hover": { bgcolor: "#232335" },
+                        }}
+                      >
+                        <AddIcon />
+                      </IconButton>
+                      <IconButton
+                        sx={{
+                          bgcolor: "#191924",
+                          color: "#fff",
+                          border: "1px solid #333",
+                          "&:hover": { bgcolor: "#232335" },
+                        }}
+                      >
+                        <DownloadIcon />
+                      </IconButton>
+                    </motion.div>
+                  )}
+                </AnimatePresence>
+              </motion.div>
             </Box>
 
-            {/* Info và action, rút ngắn lại */}
+            {/* Info & các phần còn lại */}
             <Box px={4} pt={2} pb={2} sx={{ color: "#fff" }}>
               <Stack direction="row" alignItems="center" gap={1} mb={2}>
                 <Typography fontWeight={700} fontSize={18} color="#fff">
                   {releaseYear}
                 </Typography>
                 <Typography color="text.secondary" fontWeight={700}>
-                  {duration}
+                  {durationFormat}
                 </Typography>
                 <Chip
-                  label={is_premium ? "PREMIUM" : "MIỄN PHÍ"}
+                  label={is_premium ? "PREMIUM" : "FREE"}
                   size="small"
                   sx={{
                     bgcolor: is_premium ? "#FF6F61" : "#22c55e",
@@ -272,7 +324,7 @@ export default function PopUpMovieDetail({ open, data, onClose }) {
                 ))}
               </Typography>
               <Typography color="#fff" mt={1} mb={2}>
-                {overview}
+                <ClampText line={2}>{overview}</ClampText>
               </Typography>
               {/* Dàn diễn viên */}
               <Typography color="#fff" fontWeight={700}>

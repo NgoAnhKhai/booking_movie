@@ -1,0 +1,13 @@
+:root {
+  --plyr-color-main: #b43feb; /* Màu tím của bạn */
+  --plyr-range-thumb-background: #fff;
+  --plyr-range-fill-background: linear-gradient(
+    90deg,
+    #b43feb 30%,
+    #8052cf 100%
+  );
+  --plyr-range-track-background: #3c3250;
+}
+.plyr--full-ui input[type="range"]::-webkit-slider-thumb {
+  border: 2.5px solid #b43feb;
+}

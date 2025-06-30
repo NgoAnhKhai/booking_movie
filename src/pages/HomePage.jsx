@@ -12,6 +12,16 @@ import CloseIcon from "@mui/icons-material/Close";
 import { getListMovie } from "../services/GetListMovie";
 import { getListCompany } from "../services/GetListCompany";
 import RightSidebar from "../components/RightSideBar";
+import { formatMediaUrl } from "../utils/formatMediaUrl";
+
+// Utility để check URL là YouTube/Vimeo
+function isEmbedUrl(url = "") {
+  return (
+    url.includes("youtube.com") ||
+    url.includes("youtu.be") ||
+    url.includes("vimeo.com")
+  );
+}
 
 const HomePage = () => {
   const [movies, setMovies] = useState([]);
@@ -50,12 +60,17 @@ const HomePage = () => {
       </Box>
     );
 
+  // Helper lấy URL đầy đủ cho trailer/ảnh/logo
+  const heroMovie = movies[0];
+  const heroImg = heroMovie ? formatMediaUrl(heroMovie.image_horizontal) : "";
+  const heroTrailer = heroMovie ? formatMediaUrl(heroMovie.trailer) : "";
+
   return (
     <Box display="flex" flexDirection="row">
       {/* ==== Cột trái: Nội dung chính ==== */}
       <Box flex={7} p={0}>
         {/* Hero Banner */}
-        {movies[0] && (
+        {heroMovie && (
           <Card
             sx={{
               position: "relative",
@@ -70,7 +85,7 @@ const HomePage = () => {
           >
             <CardMedia
               component="img"
-              src={movies[0].image_horizontal}
+              src={heroImg}
               sx={{
                 width: "100%",
                 height: "100%",
@@ -131,12 +146,12 @@ const HomePage = () => {
                   textOverflow: "ellipsis",
                 }}
               >
-                {movies[0].title}
+                {heroMovie.title}
               </Typography>
               <Typography color="#9CA4AC">
-                {movies[0].season
-                  ? `${movies[0].season} Season • ${movies[0].episodes} Episodes`
-                  : movies[0].genres?.join(" • ") ?? "—"}
+                {heroMovie.season
+                  ? `${heroMovie.season} Season • ${heroMovie.episodes} Episodes`
+                  : heroMovie.genres?.join(" • ") ?? "—"}
               </Typography>
               <Box mt={1.5} display="flex" alignItems="center">
                 <Button
@@ -180,7 +195,7 @@ const HomePage = () => {
         )}
 
         {/* === Trailer Modal === */}
-        {openTrailer && movies[0]?.trailer && (
+        {openTrailer && heroTrailer && (
           <Box
             sx={{
               position: "fixed",
@@ -224,7 +239,7 @@ const HomePage = () => {
               >
                 <CloseIcon />
               </IconButton>
-              {/* Video trailer */}
+              {/* Video trailer: tự động phân biệt loại */}
               <Box
                 sx={{
                   width: "100%",
@@ -234,21 +249,38 @@ const HomePage = () => {
                   overflow: "hidden",
                 }}
               >
-                <iframe
-                  src={movies[0].trailer}
-                  title="Trailer"
-                  allow="autoplay; fullscreen"
-                  allowFullScreen
-                  frameBorder="0"
-                  style={{
-                    position: "absolute",
-                    top: 0,
-                    left: 0,
-                    width: "100%",
-                    height: "100%",
-                    borderRadius: 12,
-                  }}
-                />
+                {isEmbedUrl(heroTrailer) ? (
+                  <iframe
+                    src={heroTrailer}
+                    title="Trailer"
+                    allow="autoplay; fullscreen"
+                    allowFullScreen
+                    frameBorder="0"
+                    style={{
+                      position: "absolute",
+                      top: 0,
+                      left: 0,
+                      width: "100%",
+                      height: "100%",
+                      borderRadius: 12,
+                    }}
+                  />
+                ) : (
+                  <video
+                    src={heroTrailer}
+                    controls
+                    autoPlay
+                    style={{
+                      position: "absolute",
+                      top: 0,
+                      left: 0,
+                      width: "100%",
+                      height: "100%",
+                      borderRadius: 12,
+                      background: "#000",
+                    }}
+                  />
+                )}
               </Box>
             </Box>
           </Box>
@@ -266,9 +298,7 @@ const HomePage = () => {
         >
           {companies.map((c) => {
             if (!c || !c.logo) return null;
-            const logoUrl = c.logo.startsWith("http")
-              ? c.logo
-              : `${window.location.origin}${c.logo}`;
+            const logoUrl = formatMediaUrl(c.logo);
             return (
               <Box
                 sx={{

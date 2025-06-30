@@ -14,6 +14,7 @@ import { getAllGenres } from "../services/GetAllGenres";
 
 import PopUpMovieDetail from "./movie/PopupMovieDetail";
 import { getDetailMovie } from "../services/GetDetailMovie";
+import { formatMediaUrl } from "../utils/formatMediaUrl";
 
 const RightSidebar = () => {
   const [topMovies, setTopMovies] = useState([]);
@@ -101,7 +102,7 @@ const RightSidebar = () => {
             >
               <Avatar
                 variant="rounded"
-                src={movie.image_vertical}
+                src={formatMediaUrl(movie.image_vertical)}
                 alt={movie.title}
                 sx={{ width: 54, height: 80, borderRadius: 2, boxShadow: 1 }}
               />
@@ -127,7 +128,7 @@ const RightSidebar = () => {
                     mt: 0.5,
                   }}
                 >
-                  {movie.age_rating || "PG-13"}
+                  {`PG-${movie.age_limit || "13"}`}
                 </Typography>
                 <Typography
                   variant="caption"

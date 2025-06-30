@@ -1,6 +1,6 @@
 import apiService from "../api/apiService";
 
-export const getEpisodesDetail = async (episode_id) => {
+export const GetEpisodeDetail = async (episode_id) => {
   try {
     const response = await apiService.get(
       "/api/method/cinema.api.episode.get_episode_detail",

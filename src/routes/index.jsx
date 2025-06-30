@@ -28,11 +28,11 @@ const Router = () => {
         <Route path="/recent-played" element={<RecentPlayerPage />} />
         <Route path="/download" element={<DownloadPage />} />
         <Route path="/setting" element={<SettingPage />} />
+        <Route
+          path="/watch/movie/:movie_id/episode/:episode_id"
+          element={<WatchingPage />}
+        />
       </Route>
-      <Route
-        path="/movie/watch/:movie_id/:episode_id"
-        element={<WatchingPage />}
-      />
     </Routes>
   );
 };
